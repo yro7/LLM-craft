@@ -15,7 +15,7 @@ public class ModelManager {
         new BukkitRunnable() {
             @Override
             public void run() {
-                ChatLanguageModel model = OpenAiChatModel.withApiKey("sk-proj-unH9pwyH3C7zrwXDncrST3BlbkFJR4UM7nNJYyO0lWTHuZPE");
+                ChatLanguageModel model = OpenAiChatModel.withApiKey(Config.openAI);
                 String answer = model.generate("Hello world!");
                 System.out.println(p + "generated this answer:" + answer); // Hello! How can I assist you today?
                 p.sendMessage(answer);
