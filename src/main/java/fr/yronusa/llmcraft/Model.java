@@ -4,5 +4,6 @@ public interface Model {
 
     public static enum MODEL {
         OPENAI,
+        TROLL
     }
 }

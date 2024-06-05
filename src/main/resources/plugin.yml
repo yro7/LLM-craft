@@ -2,3 +2,12 @@ name: LLM-craft
 version: '${project.version}'
 main: fr.yronusa.llmcraft.LLM_craft
 api-version: '1.20'
+commands:
+  ask:
+    description: Ask/Talk to a model.
+    usage: /ask <your prompt>
+    permission: llmcraft.ask
+  listen:
+    description: Listen the next x times a player speaks, and answers to him using the model.
+    usage: /listen <player> <model> <number of times>
+    permission: llmcraft.listen
