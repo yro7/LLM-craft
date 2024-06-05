@@ -1,1 +1,4 @@
-api-key: "blablabla"
+groq: "blablabla"
+
+openAI: "sk-proj-ooG0bjlXZUQkBJ5LAk18T3BlbkFJnCc34sDnV4LedYKUZRoz"
+claude: "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"

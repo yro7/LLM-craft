@@ -13,7 +13,7 @@ public class Listeners implements Listener {
 
         Player p = e.getPlayer();
         Block b = e.getBlock();
-        PythonIntegration.test();
+        ModelManager.test2(p);
 
     }
 }
