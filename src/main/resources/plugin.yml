@@ -1,0 +1,4 @@
+name: LLM-craft
+version: '${project.version}'
+main: fr.yronusa.llmcraft.LLM_craft
+api-version: '1.20'

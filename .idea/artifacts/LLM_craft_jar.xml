@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="LLM-craft:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/LLM_craft_jar</output-path>
+    <root id="archive" name="LLM-craft.jar">
+      <element id="module-output" name="LLM-craft" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/jython-standalone-2.7.3.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

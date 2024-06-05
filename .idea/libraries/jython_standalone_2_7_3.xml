@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="jython-standalone-2.7.3">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/jython-standalone-2.7.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
