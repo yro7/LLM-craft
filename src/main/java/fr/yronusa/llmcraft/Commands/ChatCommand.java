@@ -26,13 +26,13 @@ public class ChatCommand implements CommandExecutor {
         String modelIdentifier = strings[0];
         if(!IGModel.isModel(modelIdentifier)){
             commandSender.sendMessage("§7* §cThis model hasn't been recognized.");
-            commandSender.sendMessage("§aAvailable models types: " + IGModel.modelTypes().toString());
+            commandSender.sendMessage("§aAvailable models: " + IGModel.modelTypes().toString());
+            return true;
         }
 
         IGModel model = IGModel.getModel(modelIdentifier);
         String prompt = concatenateWithoutFirst(strings);
-        String answer = model.getPrefix() + model.chat(prompt);
-        commandSender.sendMessage(answer);
+        model.chat(prompt, commandSender);
 
 
 

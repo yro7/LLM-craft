@@ -5,6 +5,9 @@ import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.SystemMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
+import org.bukkit.command.CommandSender;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +37,7 @@ public class IGModel {
         ChatMemory chatMemory = MessageWindowChatMemory.withMaxMessages(10);
         this.identifier = identifier;
         this.modelType = type;
+
         this.assistant = AiServices.builder(Assistant.class)
                 .chatLanguageModel(type.model)
                 .chatMemory(chatMemory)
@@ -44,9 +48,31 @@ public class IGModel {
     }
 
 
+    /**
+     *
+     * @param prompt The initial prompt
+     * @param sender The commandSender (Player or Console) who triggered the action.
+     * An {@link IGModel} always takes a "triggering user" for chatting.
+     * If you want to force generating an answer, you can use {@link #forceChat}.
+     */
+    public void chat(String prompt, CommandSender sender){
+        IGModel model = this;
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                String answer = model.modelType.parameters.prefix + model.assistant.chat(prompt);
+                sender.sendMessage(answer);
+                if(!model.isPrivate()) Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(answer));
+            }
+        }.runTaskAsynchronously(LLM_craft.getInstance());
+    }
 
-    public String chat(String s){
-        return this.assistant.chat(s);
+    /**
+     *
+     * @return The generated answer by the IGModel.
+     */
+    public String forceChat(String prompt){
+        return this.modelType.parameters.prefix + this.assistant.chat(prompt);
     }
 
     public String getPrefix() {
@@ -70,8 +96,13 @@ public class IGModel {
     }
 
 
+    public boolean equals(IGModel model){
+        return this.identifier.equals(model.identifier);
+    }
 
-
+    public boolean isPrivate(){
+        return this.modelType.parameters.visibility.equals(IGModelParameters.Visibility.PRIVATE);
+    }
 
 
 }

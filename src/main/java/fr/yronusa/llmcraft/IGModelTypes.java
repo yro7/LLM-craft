@@ -89,15 +89,15 @@ public class IGModelTypes {
             System.out.println("§c[LLM-Craft] You need to define some models in your config.");
         }
         Set<String> modelsPath = configSection.getKeys(false);
-
-        for (String s : modelsPath) {
-            res.put(s,new IGModelTypes(s));
-        }
+        modelsPath.forEach(s -> res.put(s,new IGModelTypes(s)));
         return res;
     }
 
     public static void initialize(){
-
+        IGModelTypes.modelsTypes = new HashMap<>();
+        IGModelTypes.configSection = Config.config.getConfigurationSection("models");
+        IGModelTypes.modelsTypes = IGModelTypes.getIGModelsFromConfig();
+        modelsTypes.values().forEach(mt -> IGModel.createModel(mt,(mt.name+"1")));
     }
 
     public static boolean isModelType(String s){

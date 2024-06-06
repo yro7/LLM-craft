@@ -18,7 +18,7 @@ public class CreateInstance implements CommandExecutor {
         // strings[0] is the model name
         if(strings.length != 2){
             commandSender.sendMessage("§7 §cUsage: /instance <model type> <identifier>");
-            commandSender.sendMessage("§aAvailable models: " + IGModelTypes.modelTypes().toString());
+            commandSender.sendMessage("§aAvailable models types: " + IGModelTypes.modelTypes().toString());
             return true;
         }
 
@@ -26,6 +26,7 @@ public class CreateInstance implements CommandExecutor {
         if(!IGModelTypes.isModelType(modelType)){
             commandSender.sendMessage("§7* §cSorry, this model type has not been recognized");
             commandSender.sendMessage("§aAvailable models types: " + IGModelTypes.modelTypes().toString());
+            return true;
         }
 
         IGModelTypes type = IGModelTypes.modelsTypes.get(modelType);
@@ -37,7 +38,7 @@ public class CreateInstance implements CommandExecutor {
         }
 
         IGModel.createModel(type,identifier);
-        commandSender.sendMessage("§7* §aSuccessfully instancied the new model ! You can chat with him using /ask <" + identifier + "> <message>.");
+        commandSender.sendMessage("§7* §aSuccessfully instanced the new model ! You can chat with him using /ask " + identifier + " <message>.");
 
         return true;
     }

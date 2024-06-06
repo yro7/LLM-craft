@@ -24,7 +24,8 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void onPlayerMessage(AsyncPlayerChatEvent e){
-
+        ListeningModel.getModelsListening(e.getPlayer())
+                .forEach(model -> model.chat(e.getMessage(), e.getPlayer()));
     }
 
 }

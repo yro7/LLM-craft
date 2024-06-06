@@ -22,12 +22,11 @@ public final class LLM_craft extends JavaPlugin {
         saveDefaultConfig();
         Config.load();
 
-        IGModelTypes.modelsTypes = new HashMap<>();
         IGModel.activeModels = new HashMap<>();
-
-        IGModelTypes.configSection = Config.config.getConfigurationSection("models");
-        IGModelTypes.modelsTypes = IGModelTypes.getIGModelsFromConfig();
-
+        ListeningModel.listeningModels = new HashMap<>();
+        
+        IGModelTypes.initialize();
+        
         getServer().getPluginManager().registerEvents(new Listeners(), this);
         this.getCommand("ask").setExecutor(new ChatCommand());
         this.getCommand("listen").setExecutor(new Listen());
