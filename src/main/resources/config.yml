@@ -2,6 +2,10 @@
 openAI: "null"
 anthropic: "null"
 models:
+  basicgpt:
+    provider: openai
+    model-name: gpt-3.5-turbo
+    system-prompt: "You are a Minecraft AI assistant. Help the player."
   troller:
     provider: openai
     system-prompt: "You are an evil Minecraft AI which aims to mock and troll other Players based on what they say, starting now:"
@@ -9,5 +13,6 @@ models:
     prefix: "§6§lDevilGPT > §e" # Do you want to put a prefix before the model answers ?
     model-name: gpt-3.5-turbo
     temperature: 0.2
-    max_tokens: 400
-    frequencyPenalty: 2
+    max-tokens: 400
+    frequency-penalty: 2
+    time-out: 60
