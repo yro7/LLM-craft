@@ -1,12 +1,11 @@
 package fr.yronusa.llmcraft.Commands;
 
-import fr.yronusa.llmcraft.Model;
+import fr.yronusa.llmcraft.IGModelTypes;
 import fr.yronusa.llmcraft.ModelListener;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class Listen implements CommandExecutor {
@@ -20,7 +19,7 @@ public class Listen implements CommandExecutor {
         }
 
         ModelListener ml = new ModelListener(Bukkit.getPlayer(strings[0]),
-                                             Model.MODEL.valueOf(strings[1].toUpperCase()),
+                                             IGModelTypes.MODEL.valueOf(strings[1].toUpperCase()),
                                              Integer.parseInt(strings[2]));
         ModelListener ml2 = ModelListener.getListener(Bukkit.getPlayer((strings[0])));
         if(ml2 != null) commandSender.sendMessage("§7* §cWarning: the player was already listened.");

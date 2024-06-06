@@ -3,13 +3,12 @@ package fr.yronusa.llmcraft;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class ModelManager {
 
 
-    public static void execute(Model.MODEL modelType, CommandSender commandSender, String prompt){
+    public static void execute(IGModelTypes.MODEL modelType, CommandSender commandSender, String prompt){
         new BukkitRunnable() {
             @Override
             public void run() {

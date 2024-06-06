@@ -1,19 +1,12 @@
 package fr.yronusa.llmcraft.Commands;
 
-import dev.langchain4j.model.chat.ChatLanguageModel;
-import dev.langchain4j.model.openai.OpenAiChatModel;
 import fr.yronusa.llmcraft.Config;
-import fr.yronusa.llmcraft.LLM_craft;
-import fr.yronusa.llmcraft.Model;
+import fr.yronusa.llmcraft.IGModelTypes;
 import fr.yronusa.llmcraft.ModelManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class ChatCommand implements CommandExecutor {
     @Override
@@ -30,7 +23,7 @@ public class ChatCommand implements CommandExecutor {
         }
 
         try{
-            Model.MODEL m = Model.MODEL.valueOf(strings[0].toUpperCase());
+            IGModelTypes.MODEL m = IGModelTypes.MODEL.valueOf(strings[0].toUpperCase());
             if(!Config.availablesModels.contains(m)){
                 commandSender.sendMessage("§7* §cSorry, this model is not available.");
                 commandSender.sendMessage("§aAvailable models: " + Config.availablesModels.toString());

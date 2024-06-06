@@ -1,3 +1,13 @@
-groq: "null"
+
 openAI: "null"
-claude: "null"
+anthropic: "null"
+models:
+  troller:
+    provider: openai
+    system-prompt: "You are an evil Minecraft AI which aims to mock and troll other Players based on what they say, starting now:"
+    persistent: true # Will the model remember what was previously said ?
+    prefix: "§6§lDevilGPT > §e" # Do you want to put a prefix before the model answers ?
+    model-name: gpt-3.5-turbo
+    temperature: 0.2
+    max_tokens: 400
+    frequencyPenalty: 2

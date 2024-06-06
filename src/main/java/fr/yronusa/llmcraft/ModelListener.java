@@ -10,10 +10,10 @@ public class ModelListener {
 
     Player player;
     int numberOfListen;
-    Model.MODEL modelType;
+    IGModelTypes.MODEL modelType;
 
 
-    public ModelListener(Player p,Model.MODEL modelType, int numberOfListen) {
+    public ModelListener(Player p, IGModelTypes.MODEL modelType, int numberOfListen) {
         this.player = p;
         this.numberOfListen = numberOfListen;
         this.modelType = modelType;
