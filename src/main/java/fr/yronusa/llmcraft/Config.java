@@ -10,15 +10,9 @@ public class Config {
     public static FileConfiguration config;
     public static String openAI;
 
-    public static List<IGModelTypes.MODEL> availablesModels;
-
-
 
     public static void load() {
-        availablesModels = new ArrayList<>();
         config = LLM_craft.getInstance().getConfig();
         openAI = config.getString("openAI");
-        if(openAI != null && !openAI.equals("null")) availablesModels.add(IGModelTypes.MODEL.OPENAI);
-        if(openAI != null && !openAI.equals("null")) availablesModels.add(IGModelTypes.MODEL.TROLL);
     }
 }

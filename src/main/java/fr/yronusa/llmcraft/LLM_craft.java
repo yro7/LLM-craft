@@ -1,11 +1,9 @@
 package fr.yronusa.llmcraft;
 
 import fr.yronusa.llmcraft.Commands.ChatCommand;
+import fr.yronusa.llmcraft.Commands.CreateInstance;
 import fr.yronusa.llmcraft.Commands.Listen;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.ArrayList;
 
 public final class LLM_craft extends JavaPlugin {
 
@@ -20,12 +18,13 @@ public final class LLM_craft extends JavaPlugin {
         // Plugin startup logic
         instance = this;
         saveDefaultConfig();
-        ModelListener.modelListeners = new ArrayList<>();
-        fr.yronusa.llmcraft.Config.load();
+        Config.load();
+        IGModelTypes.modelsTypes = IGModelTypes.getIGModelsFromConfig("models");
 
         getServer().getPluginManager().registerEvents(new Listeners(), this);
         this.getCommand("ask").setExecutor(new ChatCommand());
         this.getCommand("listen").setExecutor(new Listen());
+        this.getCommand("instance").setExecutor(new CreateInstance());
     }
 
     @Override

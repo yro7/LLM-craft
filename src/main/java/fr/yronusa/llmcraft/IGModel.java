@@ -5,56 +5,72 @@ import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.SystemMessage;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Represents an instance of a {@link IGModelTypes}.
  * Using instances allows you to have similar models but with a different context.
  */
+
 public class IGModel {
 
-    interface Assistant {
 
-        @SystemMessage(String message);
+
+    public interface Assistant {
         String chat(String message);
     }
 
-    public static List<IGModel> activeModels;
+    public static HashMap<String,IGModel> activeModels;
 
     public IGModelTypes modelType;
-    public Assistant assistant;
     public String identifier;
+    public Assistant assistant;
 
-    public IGModel instance(IGModelTypes type, String identifier){
+    public IGModel(IGModelTypes type, String identifier){
 
-        IGModel instance = AiServices.builder(IGModel.class)
-                .chatLanguageModel(this.modelType.model)
-                .systemMessageProvider(chatMemoryId -> this.modelType.parameters.systemPrompt)
-                .build();
-
-        instance.identifier = identifier;
-        instance.modelType = type;
-
-        activeModels.add(instance);
         ChatMemory chatMemory = MessageWindowChatMemory.withMaxMessages(10);
-        SystemMessage systemMessage = SystemMessage.from(this.modelType.parameters.systemPrompt);
-        chatMemory.add(systemMessage);
-
+        this.identifier = identifier;
+        this.modelType = type;
         this.assistant = AiServices.builder(Assistant.class)
-                .chatLanguageModel(this.modelType.model)
+                .chatLanguageModel(type.model)
                 .chatMemory(chatMemory)
+                .systemMessageProvider(chatMemoryId -> type.parameters.systemPrompt)
                 .build();
 
-        String answer = assistant.chat("Hello! My name is Klaus.");
-        System.out.println(answer); // Hello Klaus! How can I assist you today?
-
-        String answerWithName = assistant.chat("What is my name?");
-        System.out.println(answerWithName); // Your name is Klaus.
-
-        return instance;
-
-
-
+        System.out.println(this.assistant.chat("hello, how are you ?"));
     }
+
+
+
+    public String chat(String s){
+        return this.assistant.chat(s);
+    }
+
+    public String getPrefix() {
+        return this.modelType.parameters.prefix;
+    }
+
+    public static void createModel(IGModelTypes type, String identifier){
+        activeModels.put(identifier, new IGModel(type,identifier));
+    }
+
+    public static boolean isModel(String s){
+        return activeModels.containsKey(s);
+    }
+
+    public static Set<String> modelTypes(){
+        return activeModels.keySet();
+    }
+
+    public static IGModel getModel(String identifier){
+        return activeModels.get(identifier);
+    }
+
+
+
+
+
 
 }

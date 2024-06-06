@@ -2,14 +2,11 @@ package fr.yronusa.llmcraft;
 
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
-import dev.langchain4j.service.AiServices;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Set;
 
 /**
@@ -19,9 +16,9 @@ import java.util.Set;
  */
 public class IGModelTypes {
     public static ConfigurationSection configSection;
-    public static List<IGModelTypes> models;
+    public static HashMap<String,IGModelTypes> modelsTypes;
 
-    public static enum Provider {
+    public enum Provider {
         OPENAI,
         ANTHROPIC
     }
@@ -76,25 +73,30 @@ public class IGModelTypes {
         return this.parameters.modelName;
     }
 
-    public static List<IGModelTypes> getIGModelsFromConfig(String path) {
+    public static HashMap<String,IGModelTypes> getIGModelsFromConfig(String path) {
         configSection = Config.config.getConfigurationSection("models");
-        List<IGModelTypes> res = new ArrayList<>();
+        HashMap<String,IGModelTypes> res = new HashMap<String,IGModelTypes>();
         if(configSection == null){
             System.out.println("§c[LLM-Craft] You need to define some models in your config.");
         }
         Set<String> modelsPath = configSection.getKeys(false);
 
         for (String s : modelsPath) {
-            res.add(new IGModelTypes(s));
+            res.put(s,new IGModelTypes(s));
         }
         return res;
     }
 
     public static void initialize(){
 
+    }
 
+    public static boolean isModelType(String s){
+        return modelsTypes.containsKey(s);
+    }
 
-
+    public static Set<String> modelTypes(){
+        return modelsTypes.keySet();
     }
 
 

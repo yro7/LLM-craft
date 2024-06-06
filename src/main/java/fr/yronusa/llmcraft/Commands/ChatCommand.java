@@ -1,6 +1,7 @@
 package fr.yronusa.llmcraft.Commands;
 
 import fr.yronusa.llmcraft.Config;
+import fr.yronusa.llmcraft.IGModel;
 import fr.yronusa.llmcraft.IGModelTypes;
 import fr.yronusa.llmcraft.ModelManager;
 import org.bukkit.command.Command;
@@ -22,21 +23,19 @@ public class ChatCommand implements CommandExecutor {
             return true;
         }
 
-        try{
-            IGModelTypes.MODEL m = IGModelTypes.MODEL.valueOf(strings[0].toUpperCase());
-            if(!Config.availablesModels.contains(m)){
-                commandSender.sendMessage("§7* §cSorry, this model is not available.");
-                commandSender.sendMessage("§aAvailable models: " + Config.availablesModels.toString());
-            }
-
-            String prompt = concatenateWithoutFirst(strings);
-
-            ModelManager.execute(m, commandSender, prompt);
-
-        } catch(IllegalArgumentException e){
-            commandSender.sendMessage("§7* §cSorry, this model has not been recognized.");
-            commandSender.sendMessage("§aAvailable models: " + Config.availablesModels.toString());
+        String modelIdentifier = strings[0];
+        if(!IGModel.isModel(modelIdentifier)){
+            commandSender.sendMessage("§7* §cThis model hasn't been recognized.");
+            commandSender.sendMessage("§aAvailable models types: " + IGModel.modelTypes().toString());
         }
+        IGModel model = IGModel.getModel(modelIdentifier);
+        String prompt = concatenateWithoutFirst(strings);
+        String answer = model.getPrefix() + model.chat(prompt);
+        commandSender.sendMessage(answer);
+
+
+
+
 
         return true;
     }
