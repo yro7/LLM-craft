@@ -4,6 +4,7 @@ import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.SystemMessage;
+import org.bukkit.Bukkit;
 
 import java.util.HashMap;
 import java.util.List;

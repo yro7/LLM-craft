@@ -5,9 +5,13 @@ api-version: '1.20'
 commands:
   ask:
     description: Ask/Talk to a model.
-    usage: /ask <your prompt>
+    usage: /ask <model> <your prompt>
     permission: llmcraft.ask
   listen:
     description: Listen the next x times a player speaks, and answers to him using the model.
     usage: /listen <player> <model> <number of times>
     permission: llmcraft.listen
+  instance:
+    description: create a new instance of the specified model type.
+    usage: /instance <model type> <identifier>
+    permission: llmcraft.instance

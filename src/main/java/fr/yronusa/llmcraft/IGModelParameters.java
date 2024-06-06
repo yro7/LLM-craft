@@ -4,6 +4,11 @@ import java.util.Objects;
 
 public class IGModelParameters {
 
+    public enum Visibility {
+        PRIVATE,
+        PUBLIC
+    }
+
     public IGModelTypes.Provider provider;
     public String systemPrompt;
     public boolean persistent;
@@ -13,10 +18,11 @@ public class IGModelParameters {
     public int maxTokens;
     public double frequencyPenalty;
     public int timeOut;
+    public Visibility visibility;
 
     public IGModelParameters(IGModelTypes.Provider provider, String systemPrompt, boolean persistent,
                              String prefix, String modelName, double temperature, int max_tokens,
-                             double frequency_penalty, int timeOut) {
+                             double frequency_penalty, int timeOut, Visibility visibility) {
 
         switch(provider){
             case OPENAI:
@@ -28,6 +34,7 @@ public class IGModelParameters {
                 this.maxTokens = Objects.requireNonNullElse(max_tokens, 1000);
                 this.frequencyPenalty = Objects.requireNonNullElse(frequency_penalty, Double.valueOf(0));
                 this.timeOut = Objects.requireNonNullElse(timeOut, 60);
+                this.visibility = Objects.requireNonNullElse(visibility, Visibility.PRIVATE);
             case ANTHROPIC:
 
         }

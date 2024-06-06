@@ -8,10 +8,11 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 /**
  * {@link IGModelTypes} is the object that represents one type of model.
- * Each {@link IGModelTypes} can then be instancied in a {@link IGModel}.
+ * Each {@link IGModelTypes} can then be instanced in a {@link IGModel}.
  * Having those two separate objects allows you to have multiple instances of the same "model type"
  */
 public class IGModelTypes {
@@ -35,8 +36,9 @@ public class IGModelTypes {
     public IGModelTypes(String s) {
 
         this.name = s;
+        System.out.println("NAME ::: " + s);
 
-        Provider provider = Provider.valueOf(configSection.getString(s+".prefix"));
+        Provider provider = Provider.valueOf(configSection.getString(s+".provider").toUpperCase());
         String systemPrompt = configSection.getString(s+".system-prompt");
         boolean persistent = configSection.getBoolean(s + ".persistent");
         String prefix = configSection.getString(s+".prefix");
@@ -45,9 +47,16 @@ public class IGModelTypes {
         int max_tokens = configSection.getInt(s+".max-tokens");
         double frequencyPenalty = configSection.getDouble(s+".frequency-penalty");
         int timeOut = configSection.getInt(s+".time-out");
+        String visibilityString = configSection.getString(s+"visibility");
+        IGModelParameters.Visibility visibility;
+        try{
+          visibility = IGModelParameters.Visibility.valueOf(visibilityString);
+        } catch(Exception e){
+            visibility = IGModelParameters.Visibility.PRIVATE;
+        }
 
         this.parameters = new IGModelParameters(provider, systemPrompt, persistent, prefix,
-                modelName, temperature, max_tokens, frequencyPenalty, timeOut);
+                modelName, temperature, max_tokens, frequencyPenalty, timeOut, visibility);
 
         switch(provider){
             case OPENAI:
@@ -73,9 +82,9 @@ public class IGModelTypes {
         return this.parameters.modelName;
     }
 
-    public static HashMap<String,IGModelTypes> getIGModelsFromConfig(String path) {
+    public static HashMap<String,IGModelTypes> getIGModelsFromConfig() {
         configSection = Config.config.getConfigurationSection("models");
-        HashMap<String,IGModelTypes> res = new HashMap<String,IGModelTypes>();
+        HashMap<String,IGModelTypes> res = new HashMap<>();
         if(configSection == null){
             System.out.println("§c[LLM-Craft] You need to define some models in your config.");
         }

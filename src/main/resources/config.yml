@@ -6,8 +6,10 @@ models:
     provider: openai
     model-name: gpt-3.5-turbo
     system-prompt: "You are a Minecraft AI assistant. Help the player."
+    type: private
   troller:
     provider: openai
+    type: general
     system-prompt: "You are an evil Minecraft AI which aims to mock and troll other Players based on what they say, starting now:"
     persistent: true # Will the model remember what was previously said ?
     prefix: "§6§lDevilGPT > §e" # Do you want to put a prefix before the model answers ?

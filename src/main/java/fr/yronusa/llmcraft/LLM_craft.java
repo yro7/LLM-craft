@@ -5,6 +5,8 @@ import fr.yronusa.llmcraft.Commands.CreateInstance;
 import fr.yronusa.llmcraft.Commands.Listen;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashMap;
+
 public final class LLM_craft extends JavaPlugin {
 
     public static LLM_craft instance;
@@ -19,7 +21,12 @@ public final class LLM_craft extends JavaPlugin {
         instance = this;
         saveDefaultConfig();
         Config.load();
-        IGModelTypes.modelsTypes = IGModelTypes.getIGModelsFromConfig("models");
+
+        IGModelTypes.modelsTypes = new HashMap<>();
+        IGModel.activeModels = new HashMap<>();
+
+        IGModelTypes.configSection = Config.config.getConfigurationSection("models");
+        IGModelTypes.modelsTypes = IGModelTypes.getIGModelsFromConfig();
 
         getServer().getPluginManager().registerEvents(new Listeners(), this);
         this.getCommand("ask").setExecutor(new ChatCommand());
