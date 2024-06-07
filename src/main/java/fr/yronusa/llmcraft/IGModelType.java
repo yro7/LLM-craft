@@ -4,20 +4,24 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import org.bukkit.configuration.ConfigurationSection;
 
+import javax.swing.*;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
 
 /**
- * {@link IGModelTypes} is the object that represents one type of model.
- * Each {@link IGModelTypes} can then be instanced in a {@link IGModel}.
+ * {@link IGModelType} is the object that represents one type of model.
+ * Each {@link IGModelType} can then be instanced in a {@link IGModel}.
  * Having those two separate objects allows you to have multiple instances of the same "model type"
  */
-public class IGModelTypes {
+public class IGModelType {
+
     public static ConfigurationSection configSection;
-    public static HashMap<String,IGModelTypes> modelsTypes;
+    public static HashMap<String, IGModelType> modelsTypes;
+
+
 
     public enum Provider {
         OPENAI,
@@ -33,11 +37,10 @@ public class IGModelTypes {
     ChatLanguageModel model;
 
 
-    public IGModelTypes(String s) {
+    public IGModelType(String s) throws ProviderUnavailableException {
 
         this.name = s;
-        System.out.println("NAME ::: " + s);
-
+        Logger.log(Level.CONFIG, "Initializing new ModelType " + s);
         Provider provider = Provider.valueOf(configSection.getString(s+".provider").toUpperCase());
         String systemPrompt = configSection.getString(s+".system-prompt");
         boolean persistent = configSection.getBoolean(s + ".persistent");
@@ -47,16 +50,21 @@ public class IGModelTypes {
         int max_tokens = configSection.getInt(s+".max-tokens");
         double frequencyPenalty = configSection.getDouble(s+".frequency-penalty");
         int timeOut = configSection.getInt(s+".time-out");
-        String visibilityString = configSection.getString(s+"visibility");
+        String visibilityString = configSection.getString(s+".visibility");
+
         IGModelParameters.Visibility visibility;
         try{
-          visibility = IGModelParameters.Visibility.valueOf(visibilityString);
+          visibility = IGModelParameters.Visibility.valueOf(visibilityString.toUpperCase());
         } catch(Exception e){
             visibility = IGModelParameters.Visibility.PRIVATE;
         }
 
         this.parameters = new IGModelParameters(provider, systemPrompt, persistent, prefix,
                 modelName, temperature, max_tokens, frequencyPenalty, timeOut, visibility);
+
+        if(!Config.availableProviders.contains(provider)){
+            throw new ProviderUnavailableException(provider);
+        }
 
         switch(provider){
             case OPENAI:
@@ -82,21 +90,32 @@ public class IGModelTypes {
         return this.parameters.modelName;
     }
 
-    public static HashMap<String,IGModelTypes> getIGModelsFromConfig() {
+    public static HashMap<String, IGModelType> getIGModelsFromConfig() {
         configSection = Config.config.getConfigurationSection("models");
-        HashMap<String,IGModelTypes> res = new HashMap<>();
+        HashMap<String, IGModelType> res = new HashMap<>();
         if(configSection == null){
-            System.out.println("§c[LLM-Craft] You need to define some models in your config.");
+            Logger.log(Level.SEVERE, "You need to define models types in your config.yml!");
         }
         Set<String> modelsPath = configSection.getKeys(false);
-        modelsPath.forEach(s -> res.put(s,new IGModelTypes(s)));
+
+        for(String modelPath : modelsPath){
+
+            try {
+                IGModelType modelType = new IGModelType(modelPath);
+                res.put(modelPath, modelType);
+
+            } catch (ProviderUnavailableException e) {
+                Logger.log(Level.SEVERE, "ERROR: Provider " + e.getProvider() + " unavailable." +
+                        " Maybe check your api-key in the config ?");
+            }
+        }
         return res;
     }
 
     public static void initialize(){
-        IGModelTypes.modelsTypes = new HashMap<>();
-        IGModelTypes.configSection = Config.config.getConfigurationSection("models");
-        IGModelTypes.modelsTypes = IGModelTypes.getIGModelsFromConfig();
+        IGModelType.modelsTypes = new HashMap<>();
+        IGModelType.configSection = Config.config.getConfigurationSection("models");
+        IGModelType.modelsTypes = IGModelType.getIGModelsFromConfig();
         modelsTypes.values().forEach(mt -> IGModel.createModel(mt,(mt.name+"1")));
     }
 
@@ -110,3 +129,4 @@ public class IGModelTypes {
 
 
 }
+

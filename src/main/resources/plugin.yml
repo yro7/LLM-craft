@@ -2,6 +2,8 @@ name: LLM-craft
 version: '${project.version}'
 main: fr.yronusa.llmcraft.LLM_craft
 api-version: '1.20'
+author: Yronusa
+softdepend: [Citizens]
 commands:
   ask:
     description: Ask/Talk to a model.
@@ -15,3 +17,7 @@ commands:
     description: create a new instance of the specified model type.
     usage: /instance <model type> <identifier>
     permission: llmcraft.instance
+  llmcraft:
+    description: llm-craft help command
+    usage: "§a/llmcraft"
+    permission: llmcraft.help

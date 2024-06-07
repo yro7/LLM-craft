@@ -1,7 +1,6 @@
 package fr.yronusa.llmcraft.Commands;
 
 import fr.yronusa.llmcraft.IGModel;
-import fr.yronusa.llmcraft.IGModelTypes;
 import fr.yronusa.llmcraft.ListeningModel;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -10,7 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class Listen implements CommandExecutor {
@@ -45,7 +43,6 @@ public class Listen implements CommandExecutor {
         IGModel model = IGModel.getModel(modelIdentifier);
 
         ListeningModel listeningModel = new ListeningModel(model, List.of(p));
-
         return true;
     }
 

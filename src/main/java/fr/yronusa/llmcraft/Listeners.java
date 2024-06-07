@@ -6,6 +6,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,9 +19,8 @@ public class Listeners implements Listener {
     @EventHandler
     public void onPlayerEvent(BlockBreakEvent e) throws Exception {
 
-        Player p = e.getPlayer();
-        Block b = e.getBlock();
-        //ModelManager.test2(p);
+        IGModel model = IGModel.getModel("spy1");
+        model.chat(e.getEventName() + " " + e.getBlock(), e.getPlayer());
     }
 
     @EventHandler

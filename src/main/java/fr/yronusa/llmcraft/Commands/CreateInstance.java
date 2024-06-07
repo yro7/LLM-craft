@@ -1,7 +1,7 @@
 package fr.yronusa.llmcraft.Commands;
 
 import fr.yronusa.llmcraft.IGModel;
-import fr.yronusa.llmcraft.IGModelTypes;
+import fr.yronusa.llmcraft.IGModelType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,18 +18,18 @@ public class CreateInstance implements CommandExecutor {
         // strings[0] is the model name
         if(strings.length != 2){
             commandSender.sendMessage("§7 §cUsage: /instance <model type> <identifier>");
-            commandSender.sendMessage("§aAvailable models types: " + IGModelTypes.modelTypes().toString());
+            commandSender.sendMessage("§aAvailable models types: " + IGModelType.modelTypes().toString());
             return true;
         }
 
         String modelType = strings[0];
-        if(!IGModelTypes.isModelType(modelType)){
+        if(!IGModelType.isModelType(modelType)){
             commandSender.sendMessage("§7* §cSorry, this model type has not been recognized");
-            commandSender.sendMessage("§aAvailable models types: " + IGModelTypes.modelTypes().toString());
+            commandSender.sendMessage("§aAvailable models types: " + IGModelType.modelTypes().toString());
             return true;
         }
 
-        IGModelTypes type = IGModelTypes.modelsTypes.get(modelType);
+        IGModelType type = IGModelType.modelsTypes.get(modelType);
         String identifier = strings[1];
 
         if(IGModel.activeModels.containsKey(identifier)){

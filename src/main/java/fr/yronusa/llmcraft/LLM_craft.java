@@ -1,8 +1,10 @@
 package fr.yronusa.llmcraft;
 
+import fr.yronusa.llmcraft.Citizens.TalkingCitizen;
 import fr.yronusa.llmcraft.Commands.ChatCommand;
 import fr.yronusa.llmcraft.Commands.CreateInstance;
 import fr.yronusa.llmcraft.Commands.Listen;
+import fr.yronusa.llmcraft.Commands.LlmCraft;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -19,18 +21,20 @@ public final class LLM_craft extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         instance = this;
+        Logger.logger = this.getLogger();
         saveDefaultConfig();
         Config.load();
 
         IGModel.activeModels = new HashMap<>();
         ListeningModel.listeningModels = new HashMap<>();
-        
-        IGModelTypes.initialize();
-        
+        IGModelType.initialize();
+        TalkingCitizen.initialize();
+
         getServer().getPluginManager().registerEvents(new Listeners(), this);
         this.getCommand("ask").setExecutor(new ChatCommand());
         this.getCommand("listen").setExecutor(new Listen());
         this.getCommand("instance").setExecutor(new CreateInstance());
+        this.getCommand("llmcraft").setExecutor(new LlmCraft());
     }
 
     @Override

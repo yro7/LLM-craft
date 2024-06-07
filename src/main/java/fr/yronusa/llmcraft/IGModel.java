@@ -3,18 +3,23 @@ package fr.yronusa.llmcraft;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.service.AiServices;
-import dev.langchain4j.service.SystemMessage;
+import fr.yronusa.llmcraft.Citizens.Range;
 import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.logging.Level;
+
+import static fr.yronusa.llmcraft.Citizens.Range.Type.GLOBAL;
 
 /**
- * Represents an instance of a {@link IGModelTypes}.
+ * Represents an instance of a {@link IGModelType}.
  * Using instances allows you to have similar models but with a different context.
  */
 
@@ -28,11 +33,11 @@ public class IGModel {
 
     public static HashMap<String,IGModel> activeModels;
 
-    public IGModelTypes modelType;
+    public IGModelType modelType;
     public String identifier;
     public Assistant assistant;
 
-    public IGModel(IGModelTypes type, String identifier){
+    public IGModel(IGModelType type, String identifier){
 
         ChatMemory chatMemory = MessageWindowChatMemory.withMaxMessages(10);
         this.identifier = identifier;
@@ -43,43 +48,83 @@ public class IGModel {
                 .chatMemory(chatMemory)
                 .systemMessageProvider(chatMemoryId -> type.parameters.systemPrompt)
                 .build();
-
-        System.out.println(this.assistant.chat("hello, how are you ?"));
     }
 
 
     /**
-     *
+     * Handles all LLM's generating procedures.
+     * An {@link IGModel} always consumes a {@link CommandSender} for chatting.
+     * If you want to get answer's String, you can use {@link #answer}.
      * @param prompt The initial prompt
      * @param sender The commandSender (Player or Console) who triggered the action.
-     * An {@link IGModel} always takes a "triggering user" for chatting.
-     * If you want to force generating an answer, you can use {@link #forceChat}.
      */
+
     public void chat(String prompt, CommandSender sender){
+        chat(prompt, sender, new Range(GLOBAL, 0));
+    }
+
+    public void chat(String prompt, CommandSender sender, Range range) {
         IGModel model = this;
+        String user;
+
+        if(Config.provideUsername) {
+            if (sender instanceof Entity e) user = e.getName();
+            else user = "Console Administrator";
+            prompt = user + ": " + prompt;
+            String finalPrompt = prompt;
+        }
+
+        String finalPrompt = prompt;
+
+        Predicate<Player> rangeManager = new Predicate<Player>() {
+            @Override
+            public boolean test(Player player) {
+                if(range.type == GLOBAL) return true;
+                if(!(sender instanceof Player p)) return false;
+                else return(player.getLocation().distance(p.getLocation()) < range.range);
+            }
+        };
+
+
         new BukkitRunnable() {
             @Override
             public void run() {
-                String answer = model.modelType.parameters.prefix + model.assistant.chat(prompt);
+                Logger.log(Level.INFO, "Generating answer for prompt " + finalPrompt);
+                String answer = model.modelType.parameters.prefix + model.assistant.chat(finalPrompt);
                 sender.sendMessage(answer);
-                if(!model.isPrivate()) Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(answer));
+                if(!model.isPrivate()) Bukkit.getOnlinePlayers()
+                        .stream()
+                        .filter(p -> !p.equals(sender)) // Avoids to send the message 2x for the commandSender
+                        .filter(rangeManager)
+                        .forEach(p -> p.sendMessage(answer));
             }
         }.runTaskAsynchronously(LLM_craft.getInstance());
     }
+
 
     /**
      *
      * @return The generated answer by the IGModel.
      */
-    public String forceChat(String prompt){
-        return this.modelType.parameters.prefix + this.assistant.chat(prompt);
+    public String answer(String prompt){
+        IGModel model = this;
+        final String[] answer = new String[1];
+        new BukkitRunnable(){
+
+            @Override
+            public void run() {
+                answer[0] =  model.modelType.parameters.prefix + model.assistant.chat(prompt);
+            }
+        }.runTaskAsynchronously(LLM_craft.getInstance());
+
+        return answer[0];
     }
 
     public String getPrefix() {
         return this.modelType.parameters.prefix;
     }
 
-    public static void createModel(IGModelTypes type, String identifier){
+    public static void createModel(IGModelType type, String identifier){
         activeModels.put(identifier, new IGModel(type,identifier));
     }
 

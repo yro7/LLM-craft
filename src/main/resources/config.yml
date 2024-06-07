@@ -6,10 +6,10 @@ models:
     provider: openai
     model-name: gpt-3.5-turbo
     system-prompt: "You are a Minecraft AI assistant. Help the player."
-    type: private
+    visibility: public
   troller:
     provider: openai
-    type: general
+    visibility: private
     system-prompt: "You are an evil Minecraft AI which aims to mock and troll other Players based on what they say, starting now:"
     persistent: true # Will the model remember what was previously said ?
     prefix: "§6§lDevilGPT > §e" # Do you want to put a prefix before the model answers ?
@@ -18,3 +18,23 @@ models:
     max-tokens: 400
     frequency-penalty: 2
     time-out: 60
+  spy:
+    provider: openai
+    visibility: private
+    persistent: true
+    prefix: "§6§lMéchant Falis > §e"
+    system-prompt: "You are an evil Minecraft demon that aims to mock and troll Players based on their actions.
+     You will be provided the name of their actions and briefly have to taunt them. For example, if the prompt is:
+     'BlockBreakEvent' 'Diamond' you could say 'How finally, you've been so long to find them!. Starting NOW:"
+
+npcs:
+  goldsmith:
+    citizen-id: 2
+    model: basicgpt
+    type: shared
+    talking: chat
+  helper:
+    citizen-id: 3
+    model: basicgpt
+    type: personal
+    talking: hologram

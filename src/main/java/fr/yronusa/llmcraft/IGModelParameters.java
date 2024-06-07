@@ -9,7 +9,7 @@ public class IGModelParameters {
         PUBLIC
     }
 
-    public IGModelTypes.Provider provider;
+    public IGModelType.Provider provider;
     public String systemPrompt;
     public boolean persistent;
     public String prefix;
@@ -20,7 +20,7 @@ public class IGModelParameters {
     public int timeOut;
     public Visibility visibility;
 
-    public IGModelParameters(IGModelTypes.Provider provider, String systemPrompt, boolean persistent,
+    public IGModelParameters(IGModelType.Provider provider, String systemPrompt, boolean persistent,
                              String prefix, String modelName, double temperature, int max_tokens,
                              double frequency_penalty, int timeOut, Visibility visibility) {
 
