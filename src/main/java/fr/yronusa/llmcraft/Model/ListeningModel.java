@@ -1,10 +1,9 @@
-package fr.yronusa.llmcraft;
+package fr.yronusa.llmcraft.Model;
 
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 

@@ -1,6 +1,6 @@
 package fr.yronusa.llmcraft.Commands;
 
-import fr.yronusa.llmcraft.IGModel;
+import fr.yronusa.llmcraft.Model.IGModel;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

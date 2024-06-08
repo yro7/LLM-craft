@@ -1,4 +1,4 @@
-package fr.yronusa.llmcraft;
+package fr.yronusa.llmcraft.Model;
 
 import java.util.Objects;
 

@@ -1,6 +1,15 @@
 package fr.yronusa.llmcraft.Citizens;
 
+import fr.yronusa.llmcraft.Model.IGModel;
+
+/**
+ * Range defines at which distance the Model will speak.
+ * By default (if no range is provided to the {@link IGModel}),
+ * then the Model will use {@link Range#GLOBAL} as its range.
+ */
 public class Range {
+
+    public static Range GLOBAL = new Range(Type.GLOBAL,0);
 
     public enum Type {
         WORLD,

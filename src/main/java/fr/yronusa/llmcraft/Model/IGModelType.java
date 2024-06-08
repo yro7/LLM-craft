@@ -1,10 +1,12 @@
-package fr.yronusa.llmcraft;
+package fr.yronusa.llmcraft.Model;
 
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
+import fr.yronusa.llmcraft.Config;
+import fr.yronusa.llmcraft.Logger;
+import fr.yronusa.llmcraft.ProviderUnavailableException;
 import org.bukkit.configuration.ConfigurationSection;
 
-import javax.swing.*;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;

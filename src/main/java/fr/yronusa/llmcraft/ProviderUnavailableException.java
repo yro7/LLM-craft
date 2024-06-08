@@ -1,5 +1,7 @@
 package fr.yronusa.llmcraft;
 
+import fr.yronusa.llmcraft.Model.IGModelType;
+
 public class ProviderUnavailableException extends Exception {
 
     IGModelType.Provider provider;

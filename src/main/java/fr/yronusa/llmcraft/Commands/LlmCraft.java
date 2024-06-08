@@ -10,7 +10,7 @@ public class LlmCraft implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
 
         commandSender.sendMessage("§2§l§m-|--- §a§l LLM-Craft §2§l§m----|-");
-        commandSender.sendMessage("§aCreated by yro");
+        commandSender.sendMessage("§aCreated by yro for Vikicraft (GNU GPL v3)");
         commandSender.sendMessage("");
         commandSender.sendMessage("§aCommands:");
         commandSender.sendMessage("§a- /ask <model> <prompt>");

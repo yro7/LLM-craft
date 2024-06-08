@@ -1,17 +1,11 @@
 package fr.yronusa.llmcraft;
 
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
+import fr.yronusa.llmcraft.Model.IGModel;
+import fr.yronusa.llmcraft.Model.ListeningModel;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 
 public class Listeners implements Listener {
 

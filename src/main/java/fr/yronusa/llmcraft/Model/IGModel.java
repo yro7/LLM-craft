@@ -1,12 +1,12 @@
-package fr.yronusa.llmcraft;
+package fr.yronusa.llmcraft.Model;
 
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.service.AiServices;
+import fr.yronusa.llmcraft.*;
 import fr.yronusa.llmcraft.Citizens.Range;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -24,8 +24,6 @@ import static fr.yronusa.llmcraft.Citizens.Range.Type.GLOBAL;
  */
 
 public class IGModel {
-
-
 
     public interface Assistant {
         String chat(String message);
@@ -48,6 +46,7 @@ public class IGModel {
                 .chatMemory(chatMemory)
                 .systemMessageProvider(chatMemoryId -> type.parameters.systemPrompt)
                 .build();
+        activeModels.put(identifier,this);
     }
 
 
@@ -60,7 +59,7 @@ public class IGModel {
      */
 
     public void chat(String prompt, CommandSender sender){
-        chat(prompt, sender, new Range(GLOBAL, 0));
+        chat(prompt, sender, Range.GLOBAL);
     }
 
     public void chat(String prompt, CommandSender sender, Range range) {
@@ -76,13 +75,10 @@ public class IGModel {
 
         String finalPrompt = prompt;
 
-        Predicate<Player> rangeManager = new Predicate<Player>() {
-            @Override
-            public boolean test(Player player) {
-                if(range.type == GLOBAL) return true;
-                if(!(sender instanceof Player p)) return false;
-                else return(player.getLocation().distance(p.getLocation()) < range.range);
-            }
+        Predicate<Player> rangeManager = player -> {
+            if(range.type == GLOBAL) return true;
+            if(!(sender instanceof Player p)) return false;
+            else return(player.getLocation().distance(p.getLocation()) < range.range);
         };
 
 

@@ -29,12 +29,14 @@ models:
 
 npcs:
   goldsmith:
-    citizen-id: 2
+    citizen-id: 0
     model: basicgpt
     type: shared
     talking: chat
+    range: 10
   helper:
     citizen-id: 3
     model: basicgpt
     type: personal
     talking: hologram
+    range: 15
