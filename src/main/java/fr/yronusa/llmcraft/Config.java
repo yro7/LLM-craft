@@ -1,5 +1,7 @@
 package fr.yronusa.llmcraft;
 
+import dev.langchain4j.model.anthropic.AnthropicChatModel;
+import dev.langchain4j.model.input.PromptTemplate;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import fr.yronusa.llmcraft.Model.IGModelType;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,6 +14,7 @@ public class Config {
 
     public static FileConfiguration config;
     public static String openAI;
+    public static String anthropicAPI;
 
     public static List<IGModelType.Provider> availableProviders;
     public static boolean provideUsername = true;
@@ -19,17 +22,31 @@ public class Config {
 
     public static void load() {
         availableProviders = new ArrayList<>();
+        LLM_craft.getInstance().reloadConfig();
         config = LLM_craft.getInstance().getConfig();
+
         openAI = config.getString("openAI");
+        anthropicAPI = config.getString("anthropic");
 
-        System.out.println("§c"+openAI);
+        verifyProviders();
+    }
 
-        if(openAI != null && !openAI.equals("null")){
+    public static void verifyProviders(){
+        if(openAI != null && !openAI.equals("your key here")){
             try{
-                OpenAiChatModel model = OpenAiChatModel.withApiKey(openAI);
+                OpenAiChatModel.withApiKey(openAI);
                 availableProviders.add(IGModelType.Provider.OPENAI);
             } catch(Exception e){
-                Logger.log(Level.WARNING,"§c Your OpenAI API-key seems unvalid ! Please check the config.");
+                Logger.log(Level.WARNING,"§c Your OpenAI API-key seems unvalid ! Please check config.yml.");
+            }
+        }
+
+        if(anthropicAPI != null && !anthropicAPI.equals("your key here")){
+            try{
+                AnthropicChatModel.withApiKey(openAI);
+                availableProviders.add(IGModelType.Provider.OPENAI);
+            } catch(Exception e){
+                Logger.log(Level.WARNING,"§c Your Anthropic API-key seems unvalid ! Please check config.yml.");
             }
         }
 

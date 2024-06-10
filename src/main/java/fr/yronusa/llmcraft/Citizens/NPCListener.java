@@ -2,12 +2,12 @@ package fr.yronusa.llmcraft.Citizens;
 
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.npc.NPC;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-
-import java.net.http.WebSocket;
 
 public class NPCListener implements Listener {
 
@@ -25,14 +25,14 @@ public class NPCListener implements Listener {
     @EventHandler
     public void onMessage(AsyncPlayerChatEvent e){
         Location loc = e.getPlayer().getLocation();
-        System.out.println("AAAAAAA");
         for(TalkingCitizen tc : TalkingCitizen.talkingCitizens.values()){
-            System.out.println("range: " + tc.range.range);
-            System.out.println("distance:" + tc.getLocation().distance(loc));
-            if(tc.getLocation().distance(loc) < tc.range.range){
-                tc.chat(e.getMessage(),e.getPlayer());
+            int radius = tc.range.range;
+            if(tc.getLocation().distance(loc) < radius) {
+                tc.chat(e.getMessage(), e.getPlayer());
+                if (tc.messageOnlyInRange()) {
+                    e.getRecipients().removeIf(p -> p.getLocation().distance(loc) > radius);
+                }
             }
-
         }
     }
 

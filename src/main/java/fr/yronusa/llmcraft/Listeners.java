@@ -9,14 +9,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class Listeners implements Listener {
 
-
-    @EventHandler
-    public void onPlayerEvent(BlockBreakEvent e) throws Exception {
-
-        IGModel model = IGModel.getModel("spy1");
-        model.chat(e.getEventName() + " " + e.getBlock(), e.getPlayer());
-    }
-
     @EventHandler
     public void onPlayerMessage(AsyncPlayerChatEvent e){
         ListeningModel.getModelsListening(e.getPlayer())

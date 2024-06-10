@@ -7,7 +7,6 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
@@ -46,24 +45,24 @@ public class TalkingCitizen  {
     public Type type;
     public Talking talkingType;
     public Range range;
+    public boolean messageOnlyInRange;
 
     public TalkingCitizen(String s) {
         Logger.log(Level.CONFIG, "Initializing new TalkingCitizen " + s);
         this.name = s;
+        System.out.print(IGModelType.modelTypes().toString());
         this.modelType = IGModelType.modelsTypes.get(configSection.getString(s+".model"));
-        System.out.println("model type :" + this.modelType);
-        System.out.println(configSection.getString(s+".model"));
-        System.out.println(s+".model");
-        System.out.println(IGModelType.modelsTypes.keySet());
-        System.out.println(IGModelType.modelsTypes.values());
-
-        int id = configSection.getInt(s+".citizen-id");
-        System.out.println("id : " + id);
+        if(this.modelType == null){
+            Logger.log(Level.SEVERE, "Model type " + configSection.getString(s+".model") + " not found or not initialized. " +
+                    "Maybe check your API Key or the name of the model in config.yml ?");
+            return;
+        }
         this.npc = CitizensAPI.getNPCRegistry().getById(configSection.getInt(s+".citizen-id"));
         
         this.type = Type.valueOf(configSection.getString(s+".type").toUpperCase());
         this.talkingType = Talking.valueOf(configSection.getString(s+".talking").toUpperCase());
         this.models = new HashMap<>();
+        this.messageOnlyInRange = configSection.getBoolean(s+".message-only-in-range");
 
         int range = configSection.getInt(s+".range");
         this.range = new Range(Range.Type.WORLD, range);
@@ -75,6 +74,7 @@ public class TalkingCitizen  {
 
 
     public static void initialize(){
+        configSection = Config.config.getConfigurationSection("npcs");
         Plugin plugin = Bukkit.getPluginManager().getPlugin("Citizens");
         if (plugin == null){
             Logger.log(Level.WARNING, "Citizens soft-depend not found.");
@@ -84,21 +84,16 @@ public class TalkingCitizen  {
         TalkingCitizen.configSection = Config.config.getConfigurationSection("npcs");
         talkingCitizens = getTalkingCitizensFromConfig();
 
-        System.out.println("§cDEBUG :");
-        talkingCitizens.values().forEach(tc -> System.out.println("§c"+tc.toString()));
     }
 
     private static HashMap<NPC,TalkingCitizen> getTalkingCitizensFromConfig() {
-        configSection = Config.config.getConfigurationSection("npcs");
         HashMap<NPC,TalkingCitizen> res = new HashMap<>();
         if(configSection == null){
             Logger.log(Level.SEVERE, "You need to define NPCS in config.yml.");
         }
         Set<String> modelsPath = configSection.getKeys(false);
-        System.out.println("aaa" + Arrays.toString(modelsPath.toArray()));
         modelsPath.forEach(s -> {
             TalkingCitizen tc = new TalkingCitizen(s);
-            System.out.println("bbb" + tc.toString());
             res.put(tc.npc,tc);
         });
         return res;
@@ -132,6 +127,17 @@ public class TalkingCitizen  {
         }
     }
 
+    /**
+     * If the player is in range of the NPC : when the player sends a message, should the message only be sent to players in the radius of the NPC, or should everyone should be able to hear it?
+     *
+     */
+    public boolean messageOnlyInRange() {
+        return this.messageOnlyInRange;
+    }
+
+    /**
+     * Used for {@link Talking#HOLOGRAM} {@link TalkingCitizen}.
+     */
     public void chatHologram(String s, CommandSender commandSender){
 
     }

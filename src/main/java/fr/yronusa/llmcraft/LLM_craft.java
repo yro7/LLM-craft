@@ -2,10 +2,7 @@ package fr.yronusa.llmcraft;
 
 import fr.yronusa.llmcraft.Citizens.NPCListener;
 import fr.yronusa.llmcraft.Citizens.TalkingCitizen;
-import fr.yronusa.llmcraft.Commands.ChatCommand;
-import fr.yronusa.llmcraft.Commands.CreateInstance;
-import fr.yronusa.llmcraft.Commands.Listen;
-import fr.yronusa.llmcraft.Commands.LlmCraft;
+import fr.yronusa.llmcraft.Commands.*;
 import fr.yronusa.llmcraft.Model.IGModel;
 import fr.yronusa.llmcraft.Model.IGModelType;
 import fr.yronusa.llmcraft.Model.ListeningModel;
@@ -29,6 +26,8 @@ public final class LLM_craft extends JavaPlugin {
         saveDefaultConfig();
         Config.load();
 
+
+
         IGModel.activeModels = new HashMap<>();
         ListeningModel.listeningModels = new HashMap<>();
         IGModelType.initialize();
@@ -40,6 +39,10 @@ public final class LLM_craft extends JavaPlugin {
         this.getCommand("listen").setExecutor(new Listen());
         this.getCommand("instance").setExecutor(new CreateInstance());
         this.getCommand("llmcraft").setExecutor(new LlmCraft());
+        this.getCommand("model").setExecutor(new Model());
+        this.getCommand("models").setExecutor(new Model());
+        this.getCommand("modeltype").setExecutor(new ModelType());
+        this.getCommand("modeltypes").setExecutor(new ModelType());
     }
 
     @Override

@@ -3,7 +3,7 @@ version: '${project.version}'
 main: fr.yronusa.llmcraft.LLM_craft
 api-version: '1.20'
 author: Yronusa
-softdepend: [Citizens]
+soft-depend: [Citizens]
 commands:
   ask:
     description: Ask/Talk to a model.
@@ -18,6 +18,22 @@ commands:
     usage: /instance <model type> <identifier>
     permission: llmcraft.instance
   llmcraft:
-    description: llm-craft help command
+    description: "§aLlm-craft help command"
     usage: "§a/llmcraft"
     permission: llmcraft.help
+  model:
+    description: "Get info on a model"
+    usage: "§a/model <type>"
+    permission: llmcraft.model
+  models:
+    description: "Get info on a model"
+    usage: "§a/model <type>"
+    permission: llmcraft.models
+  modeltype:
+    description: "Get info on a model type"
+    usage: "§a/model <type>"
+    permission: llmcraft.modeltype
+  modeltypes:
+    description: "Get info on a model type"
+    usage: "§a/modeltypes <type>"
+    permission: llmcraft.modeltype

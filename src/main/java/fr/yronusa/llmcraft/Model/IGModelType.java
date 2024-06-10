@@ -1,7 +1,12 @@
 package fr.yronusa.llmcraft.Model;
 
+import dev.langchain4j.data.message.AiMessage;
+import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.listener.ChatLanguageModelRequest;
 import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.model.output.Response;
 import fr.yronusa.llmcraft.Config;
 import fr.yronusa.llmcraft.Logger;
 import fr.yronusa.llmcraft.ProviderUnavailableException;
@@ -10,6 +15,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -22,8 +28,6 @@ public class IGModelType {
 
     public static ConfigurationSection configSection;
     public static HashMap<String, IGModelType> modelsTypes;
-
-
 
     public enum Provider {
         OPENAI,
@@ -41,6 +45,7 @@ public class IGModelType {
 
     public IGModelType(String s) throws ProviderUnavailableException {
 
+        System.out.println("teeeest");
         this.name = s;
         Logger.log(Level.CONFIG, "Initializing new ModelType " + s);
         Provider provider = Provider.valueOf(configSection.getString(s+".provider").toUpperCase());
@@ -72,6 +77,14 @@ public class IGModelType {
             case OPENAI:
                 this.model = OpenAiChatModel.builder()
                         .apiKey(Config.openAI)
+                        .modelName(this.getModelName())
+                        .temperature(this.getTemperature())
+                        .timeout(Duration.of(this.getTO(), ChronoUnit.SECONDS))
+                        .build();
+                break;
+            case ANTHROPIC:
+                this.model = AnthropicChatModel.builder()
+                        .apiKey(Config.anthropicAPI)
                         .modelName(this.getModelName())
                         .temperature(this.getTemperature())
                         .timeout(Duration.of(this.getTO(), ChronoUnit.SECONDS))
@@ -127,6 +140,18 @@ public class IGModelType {
 
     public static Set<String> modelTypes(){
         return modelsTypes.keySet();
+    }
+
+    public String toString(){
+        return "ModelType \"" + this.name + "\" : \n" +
+                "Provider: " + this.parameters.provider + "\n" +
+                "Model name: " + this.parameters.modelName + "\n" +
+                "Visibility: " + this.parameters.visibility + "\n" +
+                "System prompt: " + this.parameters.systemPrompt + "\n" +
+                "is persistent (chat memory): " + this.parameters.persistent + "\n" +
+                "Prefix: " + this.parameters.prefix + "\n" +
+                "Temperature: " + this.parameters.temperature + "\n" +
+                "maxTokens: " + this.parameters.maxTokens + "\n";
     }
 
 

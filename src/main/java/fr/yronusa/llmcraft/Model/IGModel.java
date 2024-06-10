@@ -145,5 +145,9 @@ public class IGModel {
         return this.modelType.parameters.visibility.equals(IGModelParameters.Visibility.PRIVATE);
     }
 
+    public String toString(){
+        return "Model " + this.identifier + " : type " + this.modelType.name;
+    }
+
 
 }
