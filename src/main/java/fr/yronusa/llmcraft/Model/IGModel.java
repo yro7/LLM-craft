@@ -88,8 +88,7 @@ public class IGModel {
                 Logger.log(Level.INFO, "Generating answer for prompt " + finalPrompt);
                 String answer;
                 if(!model.canUse(sender)){
-                    answer = model.getDenyMessage();
-                    System.out.println("heyyy bug : " + answer);
+                    answer = model.modelType.parameters.prefix + model.getDenyMessage();
 
                 }
                 else{

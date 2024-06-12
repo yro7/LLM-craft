@@ -6,6 +6,7 @@ import fr.yronusa.llmcraft.LLM_craft;
 import fr.yronusa.llmcraft.Logger;
 import fr.yronusa.llmcraft.Model.IGModel;
 import fr.yronusa.llmcraft.Model.IGModelType;
+import fr.yronusa.llmcraft.Model.Limiter;
 import fr.yronusa.llmcraft.Model.ListeningModel;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,10 +21,11 @@ public class Reload
         Config.load();
         IGModel.activeModels = new HashMap<>();
         ListeningModel.listeningModels = new HashMap<>();
+        Limiter.limiters = new HashMap<>();
 
         IGModelType.initialize();
         TalkingCitizen.initialize();
-
+        Limiter.initialize();
 
 
         sender.sendMessage("§7* §aLLMCraft successfully reloaded.");
