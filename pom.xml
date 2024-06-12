@@ -94,7 +94,12 @@
             <artifactId>langchain4j-anthropic</artifactId>
             <version>0.31.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>net.luckperms</groupId>
+            <artifactId>api</artifactId>
+            <version>5.4</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>net.citizensnpcs</groupId>
             <artifactId>citizens-main</artifactId>

@@ -1,21 +1,15 @@
 package fr.yronusa.llmcraft.Model;
 
-import dev.langchain4j.data.message.AiMessage;
-import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.chat.ChatLanguageModel;
-import dev.langchain4j.model.chat.listener.ChatLanguageModelRequest;
 import dev.langchain4j.model.openai.OpenAiChatModel;
-import dev.langchain4j.model.output.Response;
 import fr.yronusa.llmcraft.Config;
 import fr.yronusa.llmcraft.Logger;
-import fr.yronusa.llmcraft.ProviderUnavailableException;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -25,6 +19,7 @@ import java.util.logging.Level;
  * Having those two separate objects allows you to have multiple instances of the same "model type"
  */
 public class IGModelType {
+
 
     public static ConfigurationSection configSection;
     public static HashMap<String, IGModelType> modelsTypes;
@@ -40,12 +35,10 @@ public class IGModelType {
      * separate property allows to retrieve later the parameters if needed.
      */
     public IGModelParameters parameters;
-    ChatLanguageModel model;
-
+    public ChatLanguageModel model;
+    public Limiter limits;
 
     public IGModelType(String s) throws ProviderUnavailableException {
-
-        System.out.println("teeeest");
         this.name = s;
         Logger.log(Level.CONFIG, "Initializing new ModelType " + s);
         Provider provider = Provider.valueOf(configSection.getString(s+".provider").toUpperCase());
@@ -58,6 +51,8 @@ public class IGModelType {
         double frequencyPenalty = configSection.getDouble(s+".frequency-penalty");
         int timeOut = configSection.getInt(s+".time-out");
         String visibilityString = configSection.getString(s+".visibility");
+
+        this.limits = Limiter.limiters.get(s);
 
         IGModelParameters.Visibility visibility;
         try{
@@ -91,6 +86,7 @@ public class IGModelType {
                         .build();
         }
 
+
     }
 
     private Double getTemperature() {
@@ -106,7 +102,6 @@ public class IGModelType {
     }
 
     public static HashMap<String, IGModelType> getIGModelsFromConfig() {
-        configSection = Config.config.getConfigurationSection("models");
         HashMap<String, IGModelType> res = new HashMap<>();
         if(configSection == null){
             Logger.log(Level.SEVERE, "You need to define models types in your config.yml!");
@@ -152,6 +147,19 @@ public class IGModelType {
                 "Prefix: " + this.parameters.prefix + "\n" +
                 "Temperature: " + this.parameters.temperature + "\n" +
                 "maxTokens: " + this.parameters.maxTokens + "\n";
+    }
+
+    public static class ProviderUnavailableException extends Exception {
+
+        IGModelType.Provider provider;
+
+        public ProviderUnavailableException(IGModelType.Provider provider) {
+            this.provider = provider;
+        }
+
+        public IGModelType.Provider getProvider() {
+            return this.provider;
+        }
     }
 
 

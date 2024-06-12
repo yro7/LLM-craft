@@ -6,6 +6,7 @@ import dev.langchain4j.service.AiServices;
 import fr.yronusa.llmcraft.*;
 import fr.yronusa.llmcraft.Citizens.Range;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -70,7 +71,6 @@ public class IGModel {
             if (sender instanceof Entity e) user = e.getName();
             else user = "Console Administrator";
             prompt = user + ": " + prompt;
-            String finalPrompt = prompt;
         }
 
         String finalPrompt = prompt;
@@ -86,7 +86,16 @@ public class IGModel {
             @Override
             public void run() {
                 Logger.log(Level.INFO, "Generating answer for prompt " + finalPrompt);
-                String answer = model.modelType.parameters.prefix + model.assistant.chat(finalPrompt);
+                String answer;
+                if(!model.canUse(sender)){
+                    answer = model.getDenyMessage();
+                    System.out.println("heyyy bug : " + answer);
+
+                }
+                else{
+                    model.use(sender);
+                    answer = model.modelType.parameters.prefix + model.assistant.chat(finalPrompt);
+                }
                 sender.sendMessage(answer);
                 if(!model.isPrivate()) Bukkit.getOnlinePlayers()
                         .stream()
@@ -143,6 +152,24 @@ public class IGModel {
 
     public boolean isPrivate(){
         return this.modelType.parameters.visibility.equals(IGModelParameters.Visibility.PRIVATE);
+    }
+
+    public boolean canUse(CommandSender sender){
+        Limiter limiter = this.modelType.limits;
+        if(limiter == null){
+            return true;
+
+        }
+        return this.modelType.limits.canUse(sender);
+    }
+
+    public void use(CommandSender sender){
+        Limiter limiter = this.modelType.limits;
+        if(limiter != null) this.modelType.limits.use(sender);
+    }
+
+    public String getDenyMessage(){
+        return this.modelType.limits.denyMessage;
     }
 
     public String toString(){

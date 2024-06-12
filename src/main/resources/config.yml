@@ -18,6 +18,7 @@ models:
     max-tokens: 400
     frequency-penalty: 2
     time-out: 60
+
   helper:
     provider: openai
     visibility: private
@@ -40,3 +41,14 @@ npcs:
     talking: chat
     range: 15
     message-only-in-range: true
+
+usage-limits:
+  city-guard:
+    deny-message: "You can not enter this castle."
+    groups:
+      default: 10
+      vip: 20
+  helper:
+    deny-message: "I don't have anything to learn you anymore, good game !"
+    groups:
+      vip: 0

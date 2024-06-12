@@ -3,7 +3,7 @@ version: '${project.version}'
 main: fr.yronusa.llmcraft.LLM_craft
 api-version: '1.20'
 author: Yronusa
-soft-depend: [Citizens]
+soft-depend: [Citizens, LuckPerms]
 commands:
   ask:
     description: Ask/Talk to a model.

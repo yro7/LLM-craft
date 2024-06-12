@@ -5,7 +5,12 @@ import fr.yronusa.llmcraft.Citizens.TalkingCitizen;
 import fr.yronusa.llmcraft.Commands.*;
 import fr.yronusa.llmcraft.Model.IGModel;
 import fr.yronusa.llmcraft.Model.IGModelType;
+import fr.yronusa.llmcraft.Model.Limiter;
 import fr.yronusa.llmcraft.Model.ListeningModel;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -17,6 +22,7 @@ public final class LLM_craft extends JavaPlugin {
     public static LLM_craft getInstance(){
         return instance;
     }
+    public static LuckPerms luckPermsAPI;
 
     @Override
     public void onEnable() {
@@ -26,7 +32,9 @@ public final class LLM_craft extends JavaPlugin {
         saveDefaultConfig();
         Config.load();
 
-
+        RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
+        luckPermsAPI = LuckPermsProvider.get();
+        Limiter.initialize();
 
         IGModel.activeModels = new HashMap<>();
         ListeningModel.listeningModels = new HashMap<>();

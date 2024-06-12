@@ -50,7 +50,6 @@ public class TalkingCitizen  {
     public TalkingCitizen(String s) {
         Logger.log(Level.CONFIG, "Initializing new TalkingCitizen " + s);
         this.name = s;
-        System.out.print(IGModelType.modelTypes().toString());
         this.modelType = IGModelType.modelsTypes.get(configSection.getString(s+".model"));
         if(this.modelType == null){
             Logger.log(Level.SEVERE, "Model type " + configSection.getString(s+".model") + " not found or not initialized. " +
