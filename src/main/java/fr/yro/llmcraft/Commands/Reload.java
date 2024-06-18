@@ -1,17 +1,12 @@
-package fr.yronusa.llmcraft.Commands;
+package fr.yro.llmcraft.Commands;
 
-import fr.yronusa.llmcraft.Citizens.TalkingCitizen;
-import fr.yronusa.llmcraft.Config;
-import fr.yronusa.llmcraft.LLM_craft;
-import fr.yronusa.llmcraft.Logger;
-import fr.yronusa.llmcraft.Model.IGModel;
-import fr.yronusa.llmcraft.Model.IGModelType;
-import fr.yronusa.llmcraft.Model.Limiter;
-import fr.yronusa.llmcraft.Model.ListeningModel;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
+import fr.yro.llmcraft.Citizens.TalkingCitizen;
+import fr.yro.llmcraft.Config;
+import fr.yro.llmcraft.Model.IGModel;
+import fr.yro.llmcraft.Model.IGModelType;
+import fr.yro.llmcraft.Model.Limiter;
+import fr.yro.llmcraft.Model.ListeningModel;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 

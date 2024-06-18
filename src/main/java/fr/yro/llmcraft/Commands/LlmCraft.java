@@ -1,4 +1,4 @@
-package fr.yronusa.llmcraft.Commands;
+package fr.yro.llmcraft.Commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

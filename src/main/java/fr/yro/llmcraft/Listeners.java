@@ -1,10 +1,8 @@
-package fr.yronusa.llmcraft;
+package fr.yro.llmcraft;
 
-import fr.yronusa.llmcraft.Model.IGModel;
-import fr.yronusa.llmcraft.Model.ListeningModel;
+import fr.yro.llmcraft.Model.ListeningModel;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class Listeners implements Listener {

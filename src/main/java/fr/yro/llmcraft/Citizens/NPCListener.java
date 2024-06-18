@@ -1,4 +1,4 @@
-package fr.yronusa.llmcraft.Citizens;
+package fr.yro.llmcraft.Citizens;
 
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.npc.NPC;

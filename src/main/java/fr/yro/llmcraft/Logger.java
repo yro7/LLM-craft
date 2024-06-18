@@ -1,4 +1,4 @@
-package fr.yronusa.llmcraft;
+package fr.yro.llmcraft;
 
 import java.util.logging.Level;
 import java.util.logging.LogRecord;

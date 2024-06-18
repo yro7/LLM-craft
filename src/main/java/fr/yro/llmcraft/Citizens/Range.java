@@ -1,6 +1,6 @@
-package fr.yronusa.llmcraft.Citizens;
+package fr.yro.llmcraft.Citizens;
 
-import fr.yronusa.llmcraft.Model.IGModel;
+import fr.yro.llmcraft.Model.IGModel;
 
 /**
  * Range defines at which distance the Model will speak.

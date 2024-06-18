@@ -1,7 +1,7 @@
-package fr.yronusa.llmcraft.Commands;
+package fr.yro.llmcraft.Commands;
 
-import fr.yronusa.llmcraft.Model.IGModel;
-import fr.yronusa.llmcraft.Model.ListeningModel;
+import fr.yro.llmcraft.Model.IGModel;
+import fr.yro.llmcraft.Model.ListeningModel;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

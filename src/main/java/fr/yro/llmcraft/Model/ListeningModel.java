@@ -1,4 +1,4 @@
-package fr.yronusa.llmcraft.Model;
+package fr.yro.llmcraft.Model;
 
 import org.bukkit.entity.Player;
 

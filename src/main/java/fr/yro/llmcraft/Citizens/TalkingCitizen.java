@@ -1,8 +1,8 @@
-package fr.yronusa.llmcraft.Citizens;
+package fr.yro.llmcraft.Citizens;
 
-import fr.yronusa.llmcraft.*;
-import fr.yronusa.llmcraft.Model.IGModel;
-import fr.yronusa.llmcraft.Model.IGModelType;
+import fr.yro.llmcraft.*;
+import fr.yro.llmcraft.Model.IGModel;
+import fr.yro.llmcraft.Model.IGModelType;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;

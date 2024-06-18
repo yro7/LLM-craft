@@ -1,12 +1,11 @@
-package fr.yronusa.llmcraft.Model;
+package fr.yro.llmcraft.Model;
 
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.service.AiServices;
-import fr.yronusa.llmcraft.*;
-import fr.yronusa.llmcraft.Citizens.Range;
+import fr.yro.llmcraft.*;
+import fr.yro.llmcraft.Citizens.Range;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -17,7 +16,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 
-import static fr.yronusa.llmcraft.Citizens.Range.Type.GLOBAL;
+import static fr.yro.llmcraft.Citizens.Range.Type.GLOBAL;
 
 /**
  * Represents an instance of a {@link IGModelType}.

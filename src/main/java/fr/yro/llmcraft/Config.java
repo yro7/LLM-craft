@@ -1,9 +1,8 @@
-package fr.yronusa.llmcraft;
+package fr.yro.llmcraft;
 
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
-import dev.langchain4j.model.input.PromptTemplate;
 import dev.langchain4j.model.openai.OpenAiChatModel;
-import fr.yronusa.llmcraft.Model.IGModelType;
+import fr.yro.llmcraft.Model.IGModelType;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;

@@ -1,10 +1,10 @@
-package fr.yronusa.llmcraft.Model;
+package fr.yro.llmcraft.Model;
 
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
-import fr.yronusa.llmcraft.Config;
-import fr.yronusa.llmcraft.Logger;
+import fr.yro.llmcraft.Config;
+import fr.yro.llmcraft.Logger;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.time.Duration;

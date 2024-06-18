@@ -1,8 +1,8 @@
-package fr.yronusa.llmcraft.Model;
+package fr.yro.llmcraft.Model;
 
-import fr.yronusa.llmcraft.Config;
-import fr.yronusa.llmcraft.LLM_craft;
-import fr.yronusa.llmcraft.Logger;
+import fr.yro.llmcraft.Config;
+import fr.yro.llmcraft.LLM_craft;
+import fr.yro.llmcraft.Logger;
 import net.luckperms.api.model.group.Group;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;

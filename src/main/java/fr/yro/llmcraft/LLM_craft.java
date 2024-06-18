@@ -1,12 +1,12 @@
-package fr.yronusa.llmcraft;
+package fr.yro.llmcraft;
 
-import fr.yronusa.llmcraft.Citizens.NPCListener;
-import fr.yronusa.llmcraft.Citizens.TalkingCitizen;
-import fr.yronusa.llmcraft.Commands.*;
-import fr.yronusa.llmcraft.Model.IGModel;
-import fr.yronusa.llmcraft.Model.IGModelType;
-import fr.yronusa.llmcraft.Model.Limiter;
-import fr.yronusa.llmcraft.Model.ListeningModel;
+import fr.yro.llmcraft.Citizens.NPCListener;
+import fr.yro.llmcraft.Citizens.TalkingCitizen;
+import fr.yro.llmcraft.Commands.*;
+import fr.yro.llmcraft.Model.IGModel;
+import fr.yro.llmcraft.Model.IGModelType;
+import fr.yro.llmcraft.Model.Limiter;
+import fr.yro.llmcraft.Model.ListeningModel;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.Bukkit;
