@@ -70,9 +70,6 @@ public class Limiter {
         else{
             usages.put(sender, usages.get(sender)+1);
         }
-
-        System.out.print("Player " + sender + " used modeltype " + this.modelName
-        + " uses: " + usages.get(sender) + ", encore : " + maxUsage(sender));
     }
 
     public static void initialize(){
@@ -132,17 +129,11 @@ public class Limiter {
 
         if(this.modelName.equals("NULL")) return false;
         int maxUsage = this.maxUsage(sender);
-        System.out.println(this.usages);
-        this.usages.forEach((sender2,value) -> System.out.print("tt" + sender2 + "  " + value));
 
         // If maxUsages == -1, then the sender is not limited.
         if(maxUsage == -1 || !this.usages.containsKey(sender)) return true;
-        System.out.print("AAAAAAAAHBBBBBBbCCCCCCCCCCDDDDDDDDDd");
 
         int usages = this.usages.get(sender);
-
-        System.out.print("usages : " + usages);
-        System.out.print("MaXusages : " + maxUsage);
         return usages < maxUsage;
 
 
