@@ -40,7 +40,7 @@ public final class LLM_craft extends JavaPlugin {
         ListeningModel.listeningModels = new HashMap<>();
         IGModelType.initialize();
         TalkingCitizen.initialize();
-
+        System.out.println("TESSSSt");
         getServer().getPluginManager().registerEvents(new Listeners(), this);
         getServer().getPluginManager().registerEvents(new NPCListener(), this);
         this.getCommand("ask").setExecutor(new ChatCommand());
