@@ -16,18 +16,5 @@ public class Listeners implements Listener {
                 .forEach(model -> model.chat(e.getMessage(), e.getPlayer()));
     }
 
-    @EventHandler
-    public void test(AsyncPlayerChatEvent e){
-
-        System.out.println("SETUP NEW HELPER ....");
-
-        IGModelType igModelType = IGModelType.modelsTypes.values().iterator().next();
-        Helper helper = new Helper(igModelType,
-                "helper-number- one");
-
-        System.out.println("SETUP NEW HELPER : " + helper + " with ig modeltype : " + igModelType);
-
-        helper.chat("HELLO, HOW ARE YOU ? ", e.getPlayer());
-    }
 
 }

@@ -25,7 +25,6 @@ models:
     persistent: true
     prefix: "§6§lHelper > §e"
     system-prompt: "You are a Minecraft helper, helping people when they ask you question."
-
 npcs:
   guard:
     citizen-id: 0
