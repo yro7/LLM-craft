@@ -1,18 +1,22 @@
 package fr.yro.llmcraft.Citizens;
 
+import com.google.common.collect.Iterators;
 import fr.yro.llmcraft.*;
 import fr.yro.llmcraft.Model.IGModel;
 import fr.yro.llmcraft.Model.IGModelType;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.npc.NPCRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.logging.Level;
+
 
 /**
  * Represents Citizen's NPC talking to you through one of your models.
@@ -56,8 +60,8 @@ public class TalkingCitizen  {
                     "Maybe check your API Key or the name of the model in config.yml ?");
             return;
         }
-        this.npc = CitizensAPI.getNPCRegistry().getById(configSection.getInt(s+".citizen-id"));
-        
+
+        this.setNPC(s);
         this.type = Type.valueOf(configSection.getString(s+".type").toUpperCase());
         this.talkingType = Talking.valueOf(configSection.getString(s+".talking").toUpperCase());
         this.models = new HashMap<>();
@@ -125,6 +129,37 @@ public class TalkingCitizen  {
                 break;
         }
     }
+
+    /**
+     * Tries to retrieve a NPC from {@link net.citizensnpcs.api.npc.NPCRegistry}.
+     * A recursive & timed function has to be used because Citizens fills its NPCRegistry after loading, so LLM-Craft is not able to use it before a moment.
+     *
+     * @param s The string that was used to construct the {@link TalkingCitizen} in the first place.
+     */
+    public void setNPC(String s){
+        TalkingCitizen tc = this;
+        NPCRegistry registry = CitizensAPI.getNPCRegistry();
+        int id = configSection.getInt(s+".citizen-id");
+        NPC npc = registry.getById(id);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if(npc == null){
+                    System.out.print("npc null");
+                    tc.setNPC(s);
+                }
+                else {
+                    System.out.print("set npc !!");
+
+                    tc.npc = registry.getById(id);
+                }
+            }
+        }.runTaskLater(LLM_craft.getInstance(), 5);
+
+        System.out.print("THIS NPC : " + this.npc);
+    }
+
 
     /**
      * If the player is in range of the NPC : when the player sends a message, should the message only be sent to players in the radius of the NPC, or should everyone should be able to hear it?

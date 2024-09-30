@@ -9,6 +9,6 @@
         <module name="LLM-craft" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="22" />
+    <bytecodeTargetLevel target="19" />
   </component>
 </project>
