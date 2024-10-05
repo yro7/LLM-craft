@@ -107,17 +107,11 @@ public class Limiter {
      * Player limit is set as the max limit of all their group's limits.
      */
     public int maxUsage(CommandSender sender){
-        int res = -1;
-        for(Group group : this.limits.keySet()){
-            if(sender.hasPermission("group."+group.getName())){
-                int limitOfGroup = this.getLimits().get(group);
-                if(res < limitOfGroup){
-                    res = limitOfGroup;
-                }
-            }
-        }
-
-        return res;
+        return this.limits.keySet().stream()
+                .filter(g -> sender.hasPermission("group."+g.getName()))
+                .mapToInt(g -> this.getLimits().get(g))
+                .max()
+                .orElse(-1);
     }
 
 
@@ -169,13 +163,5 @@ public class Limiter {
                 + "\n Limits: " + this.limits;
                 res +="\n Usages: " + this.usages;
         return res;
-    }
-
-    public void print(){
-        String res = "Limiter " + this.modelName + ". "
-                + "\n Deny message : " + this.denyMessage;
-        this.limits.forEach((g,i) -> System.out.print(g.getName()+":"+i));
-        res +="\n Usages: " + this.usages;
-        System.out.print(res);
     }
 }
