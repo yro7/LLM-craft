@@ -38,11 +38,9 @@ public class ListeningModel {
 
     public static List<IGModel> getModelsListening(Player p){
         List<IGModel> res = new ArrayList<>();
-
-        for(ListeningModel lm : listeningModels.values()){
-            if(lm.listenedPlayers.contains(p)) res.add(lm.model);
-        }
-
+        listeningModels.values().stream()
+                .filter(lm -> lm.listenedPlayers.contains(p))
+                .forEach(lm -> res.add(lm.model));
         return res;
     }
 

@@ -30,26 +30,18 @@ public class ChatCommand implements CommandExecutor {
         IGModel model = IGModel.getModel(modelIdentifier);
         String prompt = concatenateWithoutFirst(strings);
         model.chat(prompt, commandSender);
-
-
-
-
-
         return true;
     }
-
 
     public static String concatenateWithoutFirst(String[] strings) {
         if (strings == null || strings.length <= 1) {
             return "";
         }
-
         StringBuilder sb = new StringBuilder();
         for (int i = 1; i < strings.length; i++) {
             sb.append(strings[i]);
             sb.append((" "));
         }
-
         return sb.toString();
     }
 }

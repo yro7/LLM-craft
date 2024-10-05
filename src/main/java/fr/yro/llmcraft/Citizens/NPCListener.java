@@ -12,6 +12,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class NPCListener implements Listener {
 
 
+
     @EventHandler
     public void onNPCCLick(NPCRightClickEvent e){
         NPC npc = e.getNPC();
@@ -22,6 +23,13 @@ public class NPCListener implements Listener {
         }
     }
 
+    /**
+     * Retrieves all {@link TalkingCitizen} in range of the player and chat with them.
+     * If one of the {@link TalkingCitizen} has message-only-in-range enabled,
+     * player's message won't be displayed to others players outside NPC's range.
+     *
+     * @param e The AsyncPlayerChatEvent that trigger the listener
+     */
     @EventHandler
     public void onMessage(AsyncPlayerChatEvent e){
         Location loc = e.getPlayer().getLocation();
