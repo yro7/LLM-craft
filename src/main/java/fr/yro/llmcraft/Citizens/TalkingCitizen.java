@@ -25,7 +25,10 @@ import java.util.logging.Level;
  */
 public class TalkingCitizen  {
 
-    public static HashMap<NPC,TalkingCitizen> talkingCitizens;
+    /**
+     * The integer corresponds to the citizens ID of the NPC linked to the Talking Citizen.
+     */
+    public static HashMap<Integer,TalkingCitizen> talkingCitizens;
     public static ConfigurationSection configSection;
 
     public enum Type {
@@ -44,7 +47,7 @@ public class TalkingCitizen  {
      * If the NPC is {@link Type#SHARED}, then the map will only contain one model identified by "".
      */
     public HashMap<String,IGModel> models;
-    public NPC npc;
+    public int npcID;
     public IGModelType modelType;
     public String systemAppend;
     public Type type;
@@ -61,9 +64,8 @@ public class TalkingCitizen  {
                     "Maybe check your API Key or the name of the model in config.yml ?");
             return;
         }
-
-        this.setNPC(s);
         this.type = Type.valueOf(configSection.getString(s+".type").toUpperCase());
+        this.npcID = configSection.getInt(s+".citizen-id");
         this.talkingType = Talking.valueOf(configSection.getString(s+".talking").toUpperCase());
         this.models = new HashMap<>();
         this.messageOnlyInRange = configSection.getBoolean(s+".message-only-in-range");
@@ -90,16 +92,26 @@ public class TalkingCitizen  {
 
     }
 
-    private static HashMap<NPC,TalkingCitizen> getTalkingCitizensFromConfig() {
-        HashMap<NPC,TalkingCitizen> res = new HashMap<>();
+    private static HashMap<Integer,TalkingCitizen> getTalkingCitizensFromConfig() {
+        HashMap<Integer,TalkingCitizen> res = new HashMap<>();
         if(configSection == null){
             Logger.log(Level.SEVERE, "You need to define NPCS in config.yml.");
         }
         Set<String> modelsPath = configSection.getKeys(false);
         modelsPath.forEach(s -> {
             TalkingCitizen tc = new TalkingCitizen(s);
-            res.put(tc.npc,tc);
+            res.put(tc.npcID,tc);
+            System.out.println("Adding NPC: " + tc.npcID + ", Name: " + tc.name);
+            System.out.println("res size: " + res.size());
+
+            System.out.println(" new tc : " + tc.name);
+
+
         });
+
+        System.out.println("res print : " + res);
+
+
         return res;
     }
 
@@ -123,6 +135,7 @@ public class TalkingCitizen  {
                             "npc-"+this.name+"-"+name, this.systemAppend);
                     this.models.put(name,newConversationModel);
                 }
+                System.out.println("AAAAAAAA");
                 this.models.get(name).chat(s, commandSender,this.range);
                 break;
             case SHARED:
@@ -132,29 +145,12 @@ public class TalkingCitizen  {
     }
 
     /**
-     * Tries to retrieve a NPC from {@link net.citizensnpcs.api.npc.NPCRegistry}.
-     * A recursive & timed function has to be used because Citizens fills its NPCRegistry after loading, so LLM-Craft is not able to use it before a moment.
-     *
-     * @param s The string that was used to construct the {@link TalkingCitizen} in the first place.
+     * Tries to retrieve a NPC from {@link NPCRegistry}.
      */
-    public void setNPC(String s){
+    public NPC getNPC(){
         TalkingCitizen tc = this;
         NPCRegistry registry = CitizensAPI.getNPCRegistry();
-        int id = configSection.getInt(s+".citizen-id");
-        NPC npc = registry.getById(id);
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if(npc == null){
-                    tc.setNPC(s);
-                }
-                else {
-                    tc.npc = registry.getById(id);
-                }
-            }
-        }.runTaskLater(LLM_craft.getInstance(), 5);
-
+        return registry.getById(this.npcID);
     }
 
 
@@ -174,11 +170,11 @@ public class TalkingCitizen  {
     }
 
     public Location getLocation(){
-        return this.npc.getEntity().getLocation();
+        return this.getNPC().getEntity().getLocation();
     }
 
     public String  toString(){
-        return "Talking NPC " + this.name + " ID " + this.npc.getId() + " Talking-Type:" + this.talkingType
+        return "Talking NPC " + this.name + " Talking-Type:" + this.talkingType
                 + ". Model-Type : " + this.modelType + ". Shared: " + this.type +
                 "\nCurrent number of conversations hold: " + this.models.size();
     }

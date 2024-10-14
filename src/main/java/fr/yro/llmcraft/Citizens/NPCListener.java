@@ -35,7 +35,11 @@ public class NPCListener implements Listener {
         Location loc = e.getPlayer().getLocation();
         for(TalkingCitizen tc : TalkingCitizen.talkingCitizens.values()){
             int radius = tc.range.range;
+            System.out.println("tc name " + tc.name);
+
             if(tc.getLocation().distance(loc) < radius) {
+                System.out.println("DD");
+
                 tc.chat(e.getMessage(), e.getPlayer());
                 if (tc.messageOnlyInRange()) {
                     e.getRecipients().removeIf(p -> p.getLocation().distance(loc) > radius);

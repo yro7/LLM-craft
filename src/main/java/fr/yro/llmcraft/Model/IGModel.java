@@ -67,6 +67,8 @@ public class IGModel {
     }
 
     public void chat(String prompt, CommandSender sender, Range range) {
+        System.out.println("BB");
+
         IGModel model = this;
         String user;
 
