@@ -46,6 +46,7 @@ public class TalkingCitizen  {
     public HashMap<String,IGModel> models;
     public NPC npc;
     public IGModelType modelType;
+    public String systemAppend;
     public Type type;
     public Talking talkingType;
     public Range range;
@@ -66,11 +67,11 @@ public class TalkingCitizen  {
         this.talkingType = Talking.valueOf(configSection.getString(s+".talking").toUpperCase());
         this.models = new HashMap<>();
         this.messageOnlyInRange = configSection.getBoolean(s+".message-only-in-range");
-
+        this.systemAppend = configSection.getString(s+".system-append");
         int range = configSection.getInt(s+".range");
         this.range = new Range(Range.Type.WORLD, range);
         // Creates a "global" model identified with the empty string in models
-        IGModel model = new IGModel(this.modelType,"npc-"+this.name+"-global");
+        IGModel model = new IGModel(this.modelType,"npc-"+this.name+"-global", this.systemAppend);
         models.put("", model);
 
     }
@@ -119,7 +120,7 @@ public class TalkingCitizen  {
                 String name = commandSender.getName();
                 if(!models.containsKey(name)){
                     IGModel newConversationModel = new IGModel(this.modelType,
-                            "npc-"+this.name+"-"+name);
+                            "npc-"+this.name+"-"+name, this.systemAppend);
                     this.models.put(name,newConversationModel);
                 }
                 this.models.get(name).chat(s, commandSender,this.range);
@@ -146,18 +147,14 @@ public class TalkingCitizen  {
             @Override
             public void run() {
                 if(npc == null){
-                    System.out.print("npc null");
                     tc.setNPC(s);
                 }
                 else {
-                    System.out.print("set npc !!");
-
                     tc.npc = registry.getById(id);
                 }
             }
         }.runTaskLater(LLM_craft.getInstance(), 5);
 
-        System.out.print("THIS NPC : " + this.npc);
     }
 
 

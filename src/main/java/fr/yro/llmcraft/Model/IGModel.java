@@ -36,6 +36,10 @@ public class IGModel {
     public Assistant assistant;
 
     public IGModel(IGModelType type, String identifier){
+        this(type,identifier,"");
+    }
+
+    public IGModel(IGModelType type, String identifier, String systemAppend){
 
         ChatMemory chatMemory = MessageWindowChatMemory.withMaxMessages(10);
         this.identifier = identifier;
@@ -44,7 +48,7 @@ public class IGModel {
         this.assistant = AiServices.builder(Assistant.class)
                 .chatLanguageModel(type.model)
                 .chatMemory(chatMemory)
-                .systemMessageProvider(chatMemoryId -> type.parameters.systemPrompt)
+                .systemMessageProvider(chatMemoryId -> type.parameters.systemPrompt + " " + systemAppend)
                 .build();
         activeModels.put(identifier,this);
     }
@@ -80,7 +84,6 @@ public class IGModel {
             else return(player.getLocation().distance(p.getLocation()) < range.range);
         };
 
-
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -102,6 +105,7 @@ public class IGModel {
                         .forEach(p -> p.sendMessage(answer));
             }
         }.runTaskAsynchronously(LLM_craft.getInstance());
+
     }
 
 
