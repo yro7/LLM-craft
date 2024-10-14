@@ -101,17 +101,7 @@ public class TalkingCitizen  {
         modelsPath.forEach(s -> {
             TalkingCitizen tc = new TalkingCitizen(s);
             res.put(tc.npcID,tc);
-            System.out.println("Adding NPC: " + tc.npcID + ", Name: " + tc.name);
-            System.out.println("res size: " + res.size());
-
-            System.out.println(" new tc : " + tc.name);
-
-
         });
-
-        System.out.println("res print : " + res);
-
-
         return res;
     }
 
@@ -135,7 +125,6 @@ public class TalkingCitizen  {
                             "npc-"+this.name+"-"+name, this.systemAppend);
                     this.models.put(name,newConversationModel);
                 }
-                System.out.println("AAAAAAAA");
                 this.models.get(name).chat(s, commandSender,this.range);
                 break;
             case SHARED:
