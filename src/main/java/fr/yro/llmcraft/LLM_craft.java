@@ -2,6 +2,7 @@ package fr.yro.llmcraft;
 
 import fr.yro.llmcraft.Citizens.NPCListener;
 import fr.yro.llmcraft.Citizens.TalkingCitizen;
+import fr.yro.llmcraft.Citizens.TalkingCitizenFactory;
 import fr.yro.llmcraft.Commands.*;
 import fr.yro.llmcraft.Model.IGModel;
 import fr.yro.llmcraft.Model.IGModelType;
@@ -39,7 +40,7 @@ public final class LLM_craft extends JavaPlugin {
         IGModel.activeModels = new HashMap<>();
         ListeningModel.listeningModels = new HashMap<>();
         IGModelType.initialize();
-        TalkingCitizen.initialize();
+        TalkingCitizenFactory.initialize();
         getServer().getPluginManager().registerEvents(new Listeners(), this);
         getServer().getPluginManager().registerEvents(new NPCListener(), this);
         this.getCommand("ask").setExecutor(new ChatCommand());

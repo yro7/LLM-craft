@@ -1,6 +1,7 @@
 package fr.yro.llmcraft.Commands;
 
 import fr.yro.llmcraft.Citizens.TalkingCitizen;
+import fr.yro.llmcraft.Citizens.TalkingCitizenFactory;
 import fr.yro.llmcraft.Config;
 import fr.yro.llmcraft.Model.IGModel;
 import fr.yro.llmcraft.Model.IGModelType;
@@ -19,7 +20,7 @@ public class Reload
         Limiter.limiters = new HashMap<>();
 
         IGModelType.initialize();
-        TalkingCitizen.initialize();
+        TalkingCitizenFactory.initialize();
         Limiter.initialize();
 
 
