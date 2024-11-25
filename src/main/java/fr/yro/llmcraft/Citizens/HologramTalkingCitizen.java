@@ -3,6 +3,8 @@ package fr.yro.llmcraft.Citizens;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import fr.yro.llmcraft.Model.IGModel;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 
 import java.io.Console;
 import java.util.HashMap;
@@ -19,8 +21,11 @@ public class HologramTalkingCitizen extends TalkingCitizen {
      */
 
     public HashMap<String,Hologram> holograms;
+
     public HologramTalkingCitizen(TalkingCitizenParameters parameters) {
+        System.out.println("initializeed new HTC.");
         this.parameters = parameters;
+        this.holograms = new HashMap<>();
     }
 
 
@@ -41,13 +46,20 @@ public class HologramTalkingCitizen extends TalkingCitizen {
     public void chatChat(String s, CommandSender commandSender){
 
         Hologram hologram = getHologram(commandSender);
-
+        System.out.println("Retrieved hologram for player " + commandSender + " : " + hologram.getName());
+        System.out.println("holograms : " + holograms.entrySet());
     }
 
     public Hologram getHologram(CommandSender commandSender){
-        String identifier = this.getIdentifier(commandSender);
-        if(this.holograms.containsKey(commandSender)) createHologram(commandSender);
-        return this.holograms.get(commandSender);
+
+        String identifier = switch(commandSender){
+            case Player p -> p.getName();
+            default -> "Console";
+        };
+
+        if(!this.holograms.containsKey(identifier)) createHologram(commandSender);
+
+        return this.holograms.get(commandSender.getName());
     }
 
 

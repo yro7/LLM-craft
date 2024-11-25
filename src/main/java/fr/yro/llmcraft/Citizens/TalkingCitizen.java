@@ -25,6 +25,8 @@ public abstract class TalkingCitizen  {
     public static HashMap<Integer,TalkingCitizen> talkingCitizens;
 
     /**
+     * Each Player (or console) must have its own {@link IGModel} to allow personal models to be created.
+     *
      * Identifies individual {@link IGModel} for each {@link CommandSender}. The string is generally player's displayname or "Console".
      * If the NPC is Shared then the map will only contain one model identified by "".
      */
