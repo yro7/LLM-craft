@@ -24,9 +24,9 @@ public class ChatTalkingCitizen extends TalkingCitizen{
                 if(!models.containsKey(name)){
                     IGModel newConversationModel = new IGModel(this.getParameters().modelType,
                             identifier, this.getParameters().systemAppend);
-                    TalkingCitizenParameters.models.put(name,newConversationModel);
+                    models.put(name,newConversationModel);
                 }
-                TalkingCitizenParameters.models.get(name).chat(s, commandSender,this.getParameters().range);
+                models.get(name).chat(s, commandSender,this.getParameters().range);
                 break;
 
             case SHARED:

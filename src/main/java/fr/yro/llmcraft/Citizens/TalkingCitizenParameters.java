@@ -11,6 +11,8 @@ import org.bukkit.command.CommandSender;
 
 import java.util.*;
 
+import static fr.yro.llmcraft.Citizens.TalkingCitizen.models;
+
 
 /**
  * Represents Citizen's NPC talking to you through one of your models.
@@ -25,11 +27,6 @@ public class TalkingCitizenParameters  {
     }
 
     public String name;
-    /**
-     * Identifies individual {@link IGModel} for each {@link CommandSender}. The string is generally player's displayname or "Console".
-     * If the NPC is {@link Privacy#SHARED}, then the map will only contain one model identified by "".
-     */
-    public static HashMap<String,IGModel> models;
     public int npcID;
     public IGModelType modelType;
     public String systemAppend;
@@ -60,7 +57,7 @@ public class TalkingCitizenParameters  {
     public String  toString(){
         return "Talking NPC " + this.name
                 + ". Model-Type : " + this.modelType + ". Shared: " + this.type +
-                "\nCurrent number of conversations hold: " + this.models.size();
+                "\nCurrent number of conversations hold: " + models.size();
     }
 
     private boolean isShared() {

@@ -80,7 +80,7 @@ public abstract class TalkingCitizen  {
     public String  toString(){
         return "Talking NPC " + this.getParameters().name + " Talking-Type:" + this.getTalkingType()
                 + ". Model-Type : " + this.getParameters().modelType + ". Shared: " + this.getParameters().type +
-                "\nCurrent number of conversations hold: " + this.getParameters().models.size();
+                "\nCurrent number of conversations hold: " + models.size();
     }
 
     private String getTalkingType() {

@@ -72,7 +72,7 @@ public class HologramTalkingCitizen extends TalkingCitizen {
                 if(!models.containsKey(name)){
                     IGModel newConversationModel = new IGStreamModel(this.getParameters().modelType,
                             identifier, this.getParameters().systemAppend);
-                    TalkingCitizenParameters.models.put(name,newConversationModel);
+                    models.put(name,newConversationModel);
                 }
                 break;
 
