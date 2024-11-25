@@ -52,19 +52,13 @@ public class TalkingCitizenParameters  {
         return this.messageOnlyInRange;
     }
 
-    /**
-     * Used for {@link Talking#HOLOGRAM} {@link TalkingCitizen}.
-     */
-    public void chatHologram(String s, CommandSender commandSender){
-
-    }
 
     public Location getLocation(){
         return this.getNPC().getEntity().getLocation();
     }
 
     public String  toString(){
-        return "Talking NPC " + this.name + " Talking-Type:" + this.talkingType
+        return "Talking NPC " + this.name
                 + ". Model-Type : " + this.modelType + ". Shared: " + this.type +
                 "\nCurrent number of conversations hold: " + this.models.size();
     }

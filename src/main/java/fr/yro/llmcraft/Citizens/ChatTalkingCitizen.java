@@ -9,20 +9,27 @@ public class ChatTalkingCitizen extends TalkingCitizen{
         this.parameters = parameters;
     }
 
+    @Override
     public void chat(String s, CommandSender commandSender){
-        switch(this.getPrivacy()){
+            chatChat(s, commandSender);
+    }
 
+    /**
+     * Used for {@link TalkingCitizenParameters.Talking.CHAT} {@link TalkingCitizen}.
+     */
+    public void chatChat(String s, CommandSender commandSender){
+        switch(this.getParameters().type){
             case PERSONAL:
                 String name = commandSender.getName();
                 if(!models.containsKey(name)){
-                    IGModel newConversationModel = new IGModel(this.getModelType(),
-                            "npc-"+this.getName()+"-"+name, this.getSystemAppend());
-                    models.put(name,newConversationModel);
+                    IGModel newConversationModel = new IGModel(this.getParameters().modelType,
+                            "npc-"+this.getParameters().name+"-"+name, this.getParameters().systemAppend);
+                    this.getParameters().models.put(name,newConversationModel);
                 }
-                models.get(name).chat(s, commandSender,this.getRange());
+                this.getParameters().models.get(name).chat(s, commandSender,this.getParameters().range);
                 break;
             case SHARED:
-                models.get("").chat(s, commandSender, this.getRange());
+                models.get("").chat(s, commandSender, this.getParameters().range);
                 break;
         }
     }

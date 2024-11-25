@@ -18,7 +18,7 @@ public class NPCListener implements Listener {
         NPC npc = e.getNPC();
         if(TalkingCitizen.isTalkingCitizen(npc)){
             TalkingCitizen tc = TalkingCitizen.getTalkingFromNPC(npc);
-            tc.chatChat(" ", e.getClicker());
+            tc.chat(" ", e.getClicker());
 
         }
     }

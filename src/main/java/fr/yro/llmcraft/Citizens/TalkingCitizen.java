@@ -12,9 +12,6 @@ import org.bukkit.command.CommandSender;
 import java.util.*;
 
 import static fr.yro.llmcraft.Citizens.TalkingCitizenParameters.Privacy.SHARED;
-import static fr.yro.llmcraft.Citizens.TalkingCitizenParameters.Talking.CHAT;
-import static fr.yro.llmcraft.Citizens.TalkingCitizenParameters.Talking.HOLOGRAM;
-
 
 /**
  * Represents Citizen's NPC talking to you through one of your models.
@@ -30,42 +27,20 @@ public abstract class TalkingCitizen  {
 
     /**
      * Identifies individual {@link IGModel} for each {@link CommandSender}. The string is generally player's displayname or "Console".
-     * If the NPC is {@link SHARED}, then the map will only contain one model identified by "".
+     * If the NPC is Shared then the map will only contain one model identified by "".
      */
     public static HashMap<String,IGModel> models;
-
 
     TalkingCitizenParameters parameters;
 
 
-    public void chat(String s, CommandSender commandSender){
-        switch(this.getParameters().talkingType){
-            case CHAT -> chatChat(s, commandSender);
-            case HOLOGRAM -> chatHologram(s,commandSender);
-        }
-    }
+    public abstract void chat(String s, CommandSender commandSender);
 
-    /**
-     * Used for {@link TalkingCitizenParameters.Talking.CHAT} {@link TalkingCitizen}.
-     */
-    public void chatChat(String s, CommandSender commandSender){
-        switch(this.getParameters().type){
-            case PERSONAL:
-                String name = commandSender.getName();
-                if(!models.containsKey(name)){
-                    IGModel newConversationModel = new IGModel(this.getParameters().modelType,
-                            "npc-"+this.getParameters().name+"-"+name, this.getParameters().systemAppend);
-                    this.getParameters().models.put(name,newConversationModel);
-                }
-                this.getParameters().models.get(name).chat(s, commandSender,this.getParameters().range);
-                break;
-            case SHARED:
-                models.get("").chat(s, commandSender, this.getParameters().range);
-                break;
-        }
-    }
 
-    private TalkingCitizenParameters getParameters() {
+
+
+
+    TalkingCitizenParameters getParameters() {
         return this.parameters;
     }
 
@@ -98,9 +73,14 @@ public abstract class TalkingCitizen  {
     }
 
     public String  toString(){
-        return "Talking NPC " + this.getParameters().name + " Talking-Type:" + this.getParameters().talkingType
+        return "Talking NPC " + this.getParameters().name + " Talking-Type:" + this.getTalkingType()
                 + ". Model-Type : " + this.getParameters().modelType + ". Shared: " + this.getParameters().type +
                 "\nCurrent number of conversations hold: " + this.getParameters().models.size();
+    }
+
+    private String getTalkingType() {
+        if(this instanceof ChatTalkingCitizen) return "Chat-Talking";
+        else return "Hologram-Talking";
     }
 
     private boolean isShared() {
@@ -134,5 +114,4 @@ public abstract class TalkingCitizen  {
     public String getSystemAppend(){
         return this.getParameters().systemAppend;
     }
-
 }

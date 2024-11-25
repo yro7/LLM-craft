@@ -44,9 +44,10 @@ public class TalkingCitizenFactory {
 
 
     public static TalkingCitizen create(String s) {
-        TalkingCitizenParameters parameters = new TalkingCitizenParameters();
-
         Logger.log(Level.CONFIG, "Initializing new TalkingCitizen " + s);
+
+
+        TalkingCitizenParameters parameters = new TalkingCitizenParameters();
         parameters.name = s;
         parameters.modelType = IGModelType.modelsTypes.get(configSection.getString(s+".model"));
         if(parameters.modelType == null){
@@ -69,8 +70,8 @@ public class TalkingCitizenFactory {
 
         return switch(type){
             case "HOLOGRAM" -> new HologramTalkingCitizen(parameters);
-            case default -> new ChatTalkingCitizen(parameters);
-        }
+            default -> new ChatTalkingCitizen(parameters);
+        };
     }
 
 }
