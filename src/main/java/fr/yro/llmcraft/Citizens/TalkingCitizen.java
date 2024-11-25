@@ -1,6 +1,5 @@
 package fr.yro.llmcraft.Citizens;
 
-import fr.yro.llmcraft.Commands.ModelType;
 import fr.yro.llmcraft.Model.IGModel;
 import fr.yro.llmcraft.Model.IGModelType;
 import net.citizensnpcs.api.CitizensAPI;
@@ -68,6 +67,10 @@ public abstract class TalkingCitizen  {
 
     }
 
+    /**
+     * /!\ Only use this function if the server has fully started; or #getNPC() will throw an exception.
+     * @return The location of the CitizenNPC linked to the TalkingCitizen
+     */
     public Location getLocation(){
         return this.getParameters().getNPC().getEntity().getLocation();
     }
@@ -113,5 +116,9 @@ public abstract class TalkingCitizen  {
 
     public String getSystemAppend(){
         return this.getParameters().systemAppend;
+    }
+
+    protected String getIdentifier(CommandSender commandSender) {
+        return "npc-"+this.getParameters().name+"-"+commandSender.getName();
     }
 }

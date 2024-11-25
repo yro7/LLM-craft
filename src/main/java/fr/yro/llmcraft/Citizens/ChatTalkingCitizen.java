@@ -14,20 +14,21 @@ public class ChatTalkingCitizen extends TalkingCitizen{
             chatChat(s, commandSender);
     }
 
-    /**
-     * Used for {@link TalkingCitizenParameters.Talking.CHAT} {@link TalkingCitizen}.
-     */
     public void chatChat(String s, CommandSender commandSender){
         switch(this.getParameters().type){
             case PERSONAL:
+
+                String identifier = this.getIdentifier(commandSender);
                 String name = commandSender.getName();
+
                 if(!models.containsKey(name)){
                     IGModel newConversationModel = new IGModel(this.getParameters().modelType,
-                            "npc-"+this.getParameters().name+"-"+name, this.getParameters().systemAppend);
-                    this.getParameters().models.put(name,newConversationModel);
+                            identifier, this.getParameters().systemAppend);
+                    TalkingCitizenParameters.models.put(name,newConversationModel);
                 }
-                this.getParameters().models.get(name).chat(s, commandSender,this.getParameters().range);
+                TalkingCitizenParameters.models.get(name).chat(s, commandSender,this.getParameters().range);
                 break;
+
             case SHARED:
                 models.get("").chat(s, commandSender, this.getParameters().range);
                 break;

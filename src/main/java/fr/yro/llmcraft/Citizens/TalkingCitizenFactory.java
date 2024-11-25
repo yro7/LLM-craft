@@ -37,7 +37,7 @@ public class TalkingCitizenFactory {
         Set<String> modelsPath = configSection.getKeys(false);
         modelsPath.forEach(s -> {
             TalkingCitizen tc = TalkingCitizenFactory.create(s);
-            res.put(tc.getNPC().getId(), tc);
+            res.put(tc.getParameters().npcID, tc);
         });
         return res;
     }
@@ -62,7 +62,9 @@ public class TalkingCitizenFactory {
         parameters.systemAppend = configSection.getString(s+".system-append");
         int range = configSection.getInt(s+".range");
         parameters.range = new Range(Range.Type.WORLD, range);
-        // Creates a "global" model identified with the empty string in models
+
+        // Creates a "global" model identified with the empty string in models.
+        // It is the model that will be used if the TalkingCitizen is shared between all players.
         IGModel model = new IGModel(parameters.modelType,"npc-"+parameters.name+"-global", parameters.systemAppend);
         TalkingCitizen.models.put("", model);
 
