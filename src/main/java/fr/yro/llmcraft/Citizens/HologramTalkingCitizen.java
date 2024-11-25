@@ -4,9 +4,7 @@ public class HologramTalkingCitizen extends TalkingCitizen {
 
     public HologramManager hologramManager;
 
-    public HologramTalkingCitizen(String s) {
-
-        this.hologramManager = new HologramManager();
-
+    public HologramTalkingCitizen(TalkingCitizenParameters parameters) {
+        this.parameters = parameters;
     }
 }

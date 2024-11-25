@@ -1,19 +1,19 @@
 package fr.yro.llmcraft.Citizens;
 
-import fr.yro.llmcraft.*;
+import fr.yro.llmcraft.Commands.ModelType;
 import fr.yro.llmcraft.Model.IGModel;
 import fr.yro.llmcraft.Model.IGModelType;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.plugin.Plugin;
 
 import java.util.*;
-import java.util.logging.Level;
+
+import static fr.yro.llmcraft.Citizens.TalkingCitizenParameters.Privacy.SHARED;
+import static fr.yro.llmcraft.Citizens.TalkingCitizenParameters.Talking.CHAT;
+import static fr.yro.llmcraft.Citizens.TalkingCitizenParameters.Talking.HOLOGRAM;
 
 
 /**
@@ -21,70 +21,52 @@ import java.util.logging.Level;
  * Each NPC can either be shared, i.e. the NPC will remember what previous players said,
  * or personal, i.e. each player interacts with a different model on its own.
  */
-public class TalkingCitizen  {
+public abstract class TalkingCitizen  {
 
     /**
      * The integer corresponds to the citizens ID of the NPC linked to the Talking Citizen.
      */
     public static HashMap<Integer,TalkingCitizen> talkingCitizens;
 
-    public enum Type {
-        PERSONAL,
-        SHARED
-    }
-
-    public enum Talking {
-        CHAT,
-        HOLOGRAM,
-    }
-
-    public String name;
     /**
      * Identifies individual {@link IGModel} for each {@link CommandSender}. The string is generally player's displayname or "Console".
-     * If the NPC is {@link Type#SHARED}, then the map will only contain one model identified by "".
+     * If the NPC is {@link SHARED}, then the map will only contain one model identified by "".
      */
     public static HashMap<String,IGModel> models;
-    public int npcID;
-    public IGModelType modelType;
-    public String systemAppend;
-    public Type type;
-    public Talking talkingType;
-    public Range range;
-    public boolean messageOnlyInRange;
 
 
-
-    public TalkingCitizen() {
-
-    }
-
+    TalkingCitizenParameters parameters;
 
 
     public void chat(String s, CommandSender commandSender){
-        switch(this.talkingType){
+        switch(this.getParameters().talkingType){
             case CHAT -> chatChat(s, commandSender);
             case HOLOGRAM -> chatHologram(s,commandSender);
         }
     }
 
     /**
-     * Used for {@link Talking#CHAT} {@link TalkingCitizen}.
+     * Used for {@link TalkingCitizenParameters.Talking.CHAT} {@link TalkingCitizen}.
      */
     public void chatChat(String s, CommandSender commandSender){
-        switch(this.type){
+        switch(this.getParameters().type){
             case PERSONAL:
                 String name = commandSender.getName();
                 if(!models.containsKey(name)){
-                    IGModel newConversationModel = new IGModel(this.modelType,
-                            "npc-"+this.name+"-"+name, this.systemAppend);
-                    this.models.put(name,newConversationModel);
+                    IGModel newConversationModel = new IGModel(this.getParameters().modelType,
+                            "npc-"+this.getParameters().name+"-"+name, this.getParameters().systemAppend);
+                    this.getParameters().models.put(name,newConversationModel);
                 }
-                this.models.get(name).chat(s, commandSender,this.range);
+                this.getParameters().models.get(name).chat(s, commandSender,this.getParameters().range);
                 break;
             case SHARED:
-                models.get("").chat(s, commandSender, this.range);
+                models.get("").chat(s, commandSender, this.getParameters().range);
                 break;
         }
+    }
+
+    private TalkingCitizenParameters getParameters() {
+        return this.parameters;
     }
 
     /**
@@ -92,7 +74,7 @@ public class TalkingCitizen  {
      */
     public NPC getNPC(){
         NPCRegistry registry = CitizensAPI.getNPCRegistry();
-        return registry.getById(this.npcID);
+        return registry.getById(this.getParameters().npcID);
     }
 
 
@@ -101,28 +83,28 @@ public class TalkingCitizen  {
      *
      */
     public boolean messageOnlyInRange() {
-        return this.messageOnlyInRange;
+        return this.getParameters().messageOnlyInRange;
     }
 
     /**
-     * Used for {@link Talking#HOLOGRAM} {@link TalkingCitizen}.
+     * Used for Holograms {@link TalkingCitizen}.
      */
     public void chatHologram(String s, CommandSender commandSender){
 
     }
 
     public Location getLocation(){
-        return this.getNPC().getEntity().getLocation();
+        return this.getParameters().getNPC().getEntity().getLocation();
     }
 
     public String  toString(){
-        return "Talking NPC " + this.name + " Talking-Type:" + this.talkingType
-                + ". Model-Type : " + this.modelType + ". Shared: " + this.type +
-                "\nCurrent number of conversations hold: " + this.models.size();
+        return "Talking NPC " + this.getParameters().name + " Talking-Type:" + this.getParameters().talkingType
+                + ". Model-Type : " + this.getParameters().modelType + ". Shared: " + this.getParameters().type +
+                "\nCurrent number of conversations hold: " + this.getParameters().models.size();
     }
 
     private boolean isShared() {
-        return this.type == Type.SHARED;
+        return this.getParameters().type == SHARED;
     }
 
     public static boolean isTalkingCitizen(NPC npc){
@@ -133,5 +115,24 @@ public class TalkingCitizen  {
         return talkingCitizens.get(npc);
     }
 
+    public Range getRange(){
+        return this.getParameters().range;
+    }
+
+    public TalkingCitizenParameters.Privacy getPrivacy(){
+        return this.getParameters().type;
+    }
+
+    protected String getName() {
+        return this.getParameters().name;
+    }
+
+    public IGModelType getModelType(){
+        return this.getParameters().modelType;
+    }
+
+    public String getSystemAppend(){
+        return this.getParameters().systemAppend;
+    }
 
 }

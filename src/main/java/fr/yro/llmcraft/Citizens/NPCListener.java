@@ -34,7 +34,7 @@ public class NPCListener implements Listener {
     public void onMessage(AsyncPlayerChatEvent e){
         Location loc = e.getPlayer().getLocation();
         for(TalkingCitizen tc : TalkingCitizen.talkingCitizens.values()){
-            int radius = tc.range.range;
+            int radius = tc.getRange().range;
 
             if(tc.getLocation().distance(loc) < radius) {
                 tc.chat(e.getMessage(), e.getPlayer());
