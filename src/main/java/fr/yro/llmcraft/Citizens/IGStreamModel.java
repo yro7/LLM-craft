@@ -12,10 +12,10 @@ import fr.yro.llmcraft.Model.IGModel;
 import fr.yro.llmcraft.Model.IGModelType;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
+
+import static fr.yro.llmcraft.Citizens.HologramTalkingCitizen.printHolo;
 
 public class IGStreamModel extends IGModel  {
 
@@ -27,10 +27,10 @@ public class IGStreamModel extends IGModel  {
         TokenStream chat(String message);
     }
 
-    public IGStreamModel(IGModelType type, String identifier, String systemAppend){
+    public IGStreamModel(IGModelType type, String identifier, String systemAppend, Hologram hologram){
         super(type, identifier, systemAppend);
-
         ChatMemory chatMemory = MessageWindowChatMemory.withMaxMessages(10);
+        this.hologram = hologram;
         this.identifier = identifier;
         this.modelType = type;
 
@@ -48,6 +48,7 @@ public class IGStreamModel extends IGModel  {
     }
 
     public void streamChat(String prompt, CommandSender sender) {
+        // TODO : replace with Bukkit Async scheduler!
         CompletableFuture.runAsync(() -> {
             // Start the token stream
             StreamingChatLanguageModel model = OpenAiStreamingChatModel.builder()
@@ -57,13 +58,25 @@ public class IGStreamModel extends IGModel  {
 
             Assistant assistant = AiServices.create(Assistant.class, model);
             TokenStream tokenStream = assistant.chat(prompt);
+            System.out.print("debug : this hologram =" + this.hologram);
+
+            // Clear the previous message
+            this.clearHologram();
 
             // Configure stream handling
             tokenStream
                     .onNext(token -> {
+                        try {
+                            // Wait a bit, so that the response looks more like natural speak
+                            // TODO implement a "int getTimeToSleep()" function to have pauses in the generation,
+                            //  when the model puts a "," or a "." for example.
+                            Thread.sleep(10);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                         // Ensure thread-safe sending of messages to Bukkit
                         Bukkit.getScheduler().runTask(LLM_craft.getInstance(), () -> {
-                            sender.sendMessage(token);
+                            this.updateHologram(token);
                         });
                     })
                     .onError(error -> {
@@ -74,6 +87,21 @@ public class IGStreamModel extends IGModel  {
                     })
                     .start();
         });
+    }
+
+    private void clearHologram() {
+        this.hologram.getPage(0).getLine(0).setContent("");
+    }
+
+    private void updateHologram(String token) {
+        Hologram hologram = this.hologram;
+        printHolo(hologram);
+        String actual = hologram.getPage(0).getLine(0).getContent();
+        System.out.print("debug update hologram : ");
+        System.out.print("actual : " + actual + "    token : " + token);
+
+        hologram.getPage(0).setLine(0,actual + token);
+
     }
 
 }

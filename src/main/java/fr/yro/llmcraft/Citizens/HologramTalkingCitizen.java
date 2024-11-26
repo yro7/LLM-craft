@@ -1,11 +1,16 @@
 package fr.yro.llmcraft.Citizens;
 
+import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
+import eu.decentsoftware.holograms.api.holograms.HologramLine;
+import eu.decentsoftware.holograms.api.holograms.HologramPage;
+import eu.decentsoftware.holograms.api.utils.collection.DList;
 import fr.yro.llmcraft.Model.IGModel;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class HologramTalkingCitizen extends TalkingCitizen {
 
@@ -72,22 +77,34 @@ public class HologramTalkingCitizen extends TalkingCitizen {
     }
 
 
+    /**
+     * Creates a {@link Hologram} for a {@link CommandSender}, and puts it in the {@link #holograms} hashmap.
+     * @param commandSender
+     */
     public void createHologram(CommandSender commandSender){
         switch(this.getParameters().type){
             case PERSONAL:
                 String identifier = this.getIdentifier(commandSender);
                 String name = commandSender.getName();
 
+                // If the command sender has not yet a IGModel, creates it
                 if(!models.containsKey(name)){
-                    IGModel newConversationModel = new IGStreamModel(this.getParameters().modelType,
-                            identifier, this.getParameters().systemAppend);
-                    models.put(name,newConversationModel);
 
-                    Hologram hologram = new Hologram(identifier, this.getLocation());
-                    hologram.setDefaultVisibleState(false);
-                    if(commandSender instanceof Player p) hologram.setShowPlayer(p);
+                    Hologram newHologram = createBlankHologram(identifier);
+
+                    // The hologram must be private for the command sender
+                    newHologram.setDefaultVisibleState(false);
+                    if(commandSender instanceof Player p) newHologram.setShowPlayer(p);
                     System.out.println("debug : commandsender name : " + commandSender.getName());
-                    this.holograms.put(commandSender.getName(),hologram);
+
+                    IGModel newIGStreamModel = new IGStreamModel(this.getParameters().modelType,
+                            identifier, this.getParameters().systemAppend,
+                            newHologram);
+
+                    models.put(name,newIGStreamModel);
+                    this.holograms.put(commandSender.getName(),newHologram);
+                    System.out.print("create full hologram print : ");
+                    printHolo(newHologram);
                 }
                 break;
 
@@ -96,5 +113,30 @@ public class HologramTalkingCitizen extends TalkingCitizen {
                 Hologram globalHologram = new Hologram("npc-"+parameters.name+"-global-hologram", this.getLocation());
                 this.holograms.put("", globalHologram);
         }
+    }
+
+    /**
+     * Creates a blank hologram, with one page that has one empty line.
+     * @return
+     */
+    private Hologram createBlankHologram(String identifier) {
+        Hologram newHologram = new Hologram(identifier, this.getLocation());
+        DHAPI.addHologramLine(newHologram, "empty content");
+        System.out.print("create blank hologram print : ");
+        printHolo(newHologram);
+        return newHologram;
+    }
+
+    public static void printHolo(Hologram holo){
+        DList<HologramPage> pages = holo.getPages();
+        System.out.print("hologram n° " + holo.getName());
+        System.out.print("pages : " + pages);
+        HologramPage page0 = pages.getFirst();
+        System.out.print("page 0 : " + page0);
+        List<HologramLine> lines = page0.getLines();
+        System.out.print("lines : " + lines);
+        System.out.print("line 0 : " + lines.getFirst());
+        System.out.print("line 0 content : " + lines.getFirst().getContent());
+
     }
 }

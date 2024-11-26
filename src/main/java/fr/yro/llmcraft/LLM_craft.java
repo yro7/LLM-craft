@@ -1,5 +1,6 @@
 package fr.yro.llmcraft;
 
+import fr.yro.llmcraft.Citizens.HologramTalkingCitizen;
 import fr.yro.llmcraft.Citizens.NPCListener;
 import fr.yro.llmcraft.Citizens.TalkingCitizen;
 import fr.yro.llmcraft.Citizens.TalkingCitizenFactory;
@@ -52,16 +53,12 @@ public final class LLM_craft extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        removeHolograms();
     }
 
 
     public void bStatsEnable(){
-        // All you have to do is adding the following two lines in your onEnable method.
-        // You can find the plugin ids of your plugins on the page https://bstats.org/what-is-my-plugin-id
-        int pluginId = 24003; // <-- Replace with the id of your plugin!
-        Metrics metrics = new Metrics(this, pluginId);
-
+        int pluginId = 24003;
     }
 
     public void registerCommands(){
@@ -73,5 +70,15 @@ public final class LLM_craft extends JavaPlugin {
         this.getCommand("models").setExecutor(new Model());
         this.getCommand("modeltype").setExecutor(new ModelType());
         this.getCommand("modeltypes").setExecutor(new ModelType());
+    }
+
+
+    public void removeHolograms(){
+        TalkingCitizen.talkingCitizens
+                .values()
+                .stream()
+                .filter(tc -> tc instanceof HologramTalkingCitizen)
+                .forEach(tc -> ((HologramTalkingCitizen) tc).holograms.values()
+                        .forEach(holo -> holo.delete()));
     }
 }
