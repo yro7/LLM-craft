@@ -21,6 +21,7 @@ public abstract class TalkingCitizen  {
 
     /**
      * The integer corresponds to the citizens ID of the NPC linked to the Talking Citizen.
+     * Created one-time when the plugin starts, by {@link TalkingCitizenFactory#getTalkingCitizensFromConfig()}.
      */
     public static HashMap<Integer,TalkingCitizen> talkingCitizens;
 
@@ -30,14 +31,50 @@ public abstract class TalkingCitizen  {
      * Identifies individual {@link IGModel} for each {@link CommandSender}. The string is generally player's displayname or "Console".
      * If the NPC is Shared then the map will only contain one model identified by "".
      */
-    public static HashMap<String,IGModel> models;
+    public HashMap<String,IGModel> models;
 
     TalkingCitizenParameters parameters;
 
+    public TalkingCitizen(TalkingCitizenParameters parameters) {
+        this.models = new HashMap<>();
+        // Creates a "global" model identified with the empty string in models.
+        // It is the model that will be used if the TalkingCitizen is shared between all players.
+        IGModel model = new IGModel(parameters.modelType,"npc-"+parameters.name+"-global", parameters.systemAppend);
+        this.models.put("", model);
+
+        this.parameters = parameters;
+    }
 
     public abstract void chat(String s, CommandSender commandSender);
 
+    /**
+     *
+     * @param commandSender the Player (or Console)
+     * @return
+     */
+    public IGModel getModel(CommandSender commandSender){
+        IGModel res = null;
+        switch(this.getParameters().type){
+            case PERSONAL:
 
+                String identifier = this.getIdentifier(commandSender);
+                String name = commandSender.getName();
+
+                if(!models.containsKey(name)){
+                    res = new IGModel(this.getParameters().modelType,
+                            identifier, this.getParameters().systemAppend);
+                    models.put(name,res);
+                }
+                res = this.models.get(commandSender.getName());
+                break;
+
+            case SHARED:
+                res = this.models.get("");
+                break;
+        }
+        
+        return res;
+    }
 
 
 
@@ -80,7 +117,7 @@ public abstract class TalkingCitizen  {
     public String  toString(){
         return "Talking NPC " + this.getParameters().name + " Talking-Type:" + this.getTalkingType()
                 + ". Model-Type : " + this.getParameters().modelType + ". Shared: " + this.getParameters().type +
-                "\nCurrent number of conversations hold: " + models.size();
+                "\nCurrent number of conversations hold: " + this.models.size();
     }
 
     private String getTalkingType() {

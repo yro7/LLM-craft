@@ -1,23 +1,13 @@
 package fr.yro.llmcraft.Citizens;
 
-import fr.yro.llmcraft.Commands.ModelType;
-import fr.yro.llmcraft.Model.IGModel;
 import fr.yro.llmcraft.Model.IGModelType;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
-
-import java.util.*;
-
-import static fr.yro.llmcraft.Citizens.TalkingCitizen.models;
-
 
 /**
- * Represents Citizen's NPC talking to you through one of your models.
- * Each NPC can either be shared, i.e. the NPC will remember what previous players said,
- * or personal, i.e. each player interacts with a different model on its own.
+ * Container object for {@link TalkingCitizen} parameters.
  */
 public class TalkingCitizenParameters  {
 
@@ -52,12 +42,6 @@ public class TalkingCitizenParameters  {
 
     public Location getLocation(){
         return this.getNPC().getEntity().getLocation();
-    }
-
-    public String  toString(){
-        return "Talking NPC " + this.name
-                + ". Model-Type : " + this.modelType + ". Shared: " + this.type +
-                "\nCurrent number of conversations hold: " + models.size();
     }
 
     private boolean isShared() {

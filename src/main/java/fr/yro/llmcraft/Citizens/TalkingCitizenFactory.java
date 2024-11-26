@@ -4,8 +4,8 @@ import fr.yro.llmcraft.Config;
 import fr.yro.llmcraft.Logger;
 import fr.yro.llmcraft.Model.IGModel;
 import fr.yro.llmcraft.Model.IGModelType;
-import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 
@@ -24,12 +24,13 @@ public class TalkingCitizenFactory {
             Logger.log(Level.WARNING, "Citizens soft-depend not found.");
             return;
         }
+
         TalkingCitizen.talkingCitizens = new HashMap<>();
         TalkingCitizen.talkingCitizens = getTalkingCitizensFromConfig();
 
     }
 
-    private static HashMap<Integer,TalkingCitizen> getTalkingCitizensFromConfig() {
+    protected static HashMap<Integer,TalkingCitizen> getTalkingCitizensFromConfig() {
         HashMap<Integer,TalkingCitizen> res = new HashMap<>();
         if(configSection == null){
             Logger.log(Level.SEVERE, "You need to define NPCS in config.yml.");
@@ -46,7 +47,6 @@ public class TalkingCitizenFactory {
     public static TalkingCitizen create(String s) {
         Logger.log(Level.CONFIG, "Initializing new TalkingCitizen " + s);
 
-
         TalkingCitizenParameters parameters = new TalkingCitizenParameters();
         parameters.name = s;
         parameters.modelType = IGModelType.modelsTypes.get(configSection.getString(s+".model"));
@@ -57,16 +57,10 @@ public class TalkingCitizenFactory {
         }
         parameters.type = TalkingCitizenParameters.Privacy.valueOf(configSection.getString(s+".type").toUpperCase());
         parameters.npcID = configSection.getInt(s+".citizen-id");
-        TalkingCitizen.models = new HashMap<>();
         parameters.messageOnlyInRange = configSection.getBoolean(s+".message-only-in-range");
         parameters.systemAppend = configSection.getString(s+".system-append");
         int range = configSection.getInt(s+".range");
         parameters.range = new Range(Range.Type.WORLD, range);
-
-        // Creates a "global" model identified with the empty string in models.
-        // It is the model that will be used if the TalkingCitizen is shared between all players.
-        IGModel model = new IGModel(parameters.modelType,"npc-"+parameters.name+"-global", parameters.systemAppend);
-        TalkingCitizen.models.put("", model);
 
         String type = (configSection.getString(s+".talking").toUpperCase());
 
