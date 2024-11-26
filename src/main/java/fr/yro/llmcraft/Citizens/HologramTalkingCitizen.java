@@ -1,13 +1,10 @@
 package fr.yro.llmcraft.Citizens;
 
 import eu.decentsoftware.holograms.api.holograms.Hologram;
-import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import fr.yro.llmcraft.Model.IGModel;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import java.io.Console;
 import java.util.HashMap;
 
 public class HologramTalkingCitizen extends TalkingCitizen {
@@ -24,8 +21,7 @@ public class HologramTalkingCitizen extends TalkingCitizen {
     public HashMap<String,Hologram> holograms;
 
     public HologramTalkingCitizen(TalkingCitizenParameters parameters) {
-        System.out.println("initializeed new HTC.");
-        this.parameters = parameters;
+        super(parameters);
         this.holograms = new HashMap<>();
     }
 
@@ -49,7 +45,6 @@ public class HologramTalkingCitizen extends TalkingCitizen {
         Hologram hologram = getHologram(commandSender);
         System.out.println("Retrieved hologram for player " + commandSender + " : " + hologram.getName());
         System.out.println("holograms : " + holograms.keySet());
-
         /**
          * chat with hologram logic :
          * - Launch the IGStreamModel
@@ -64,9 +59,7 @@ public class HologramTalkingCitizen extends TalkingCitizen {
          * - change formatting
          */
 
-
-        this.models.
-
+        this.getModel(commandSender).chat(s,commandSender);
     }
 
     public Hologram getHologram(CommandSender commandSender){

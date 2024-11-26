@@ -5,6 +5,7 @@ import dev.langchain4j.model.chat.StreamingChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.TokenStream;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
 import fr.yro.llmcraft.Config;
 import fr.yro.llmcraft.LLM_craft;
 import fr.yro.llmcraft.Model.IGModel;

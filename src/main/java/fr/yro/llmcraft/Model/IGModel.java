@@ -20,7 +20,7 @@ import static fr.yro.llmcraft.Citizens.Range.Type.GLOBAL;
 
 /**
  * Represents an instance of a {@link IGModelType}.
- * Using instances allows you to have similar models but with a different context.
+ * Using instances allows you to have similar models but with a different context (e.g one per player)
  */
 
 public class IGModel {
@@ -29,6 +29,9 @@ public class IGModel {
         String chat(String message);
     }
 
+    /**
+     * Used to store all active models, to be able to monitor how many there are instanced on the server.
+     */
     public static HashMap<String,IGModel> activeModels;
 
     public IGModelType modelType;
