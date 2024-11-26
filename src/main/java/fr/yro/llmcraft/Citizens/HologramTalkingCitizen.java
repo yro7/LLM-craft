@@ -65,11 +65,7 @@ public class HologramTalkingCitizen extends TalkingCitizen {
          */
 
 
-        hologram.addPage();
-        hologram.getPage(0).addLine(new HologramLine(
-                hologram.getPage(0),
-                this.getLocation(),
-                "bonjr cmt cv?"));
+        this.models.
 
     }
 
@@ -99,8 +95,6 @@ public class HologramTalkingCitizen extends TalkingCitizen {
                     if(commandSender instanceof Player p) hologram.setShowPlayer(p);
                     System.out.println("debug : commandsender name : " + commandSender.getName());
                     this.holograms.put(commandSender.getName(),hologram);
-
-                //    newConversationModel.chat("coucou", commandSender);
                 }
                 break;
 
