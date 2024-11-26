@@ -6,6 +6,7 @@ import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import eu.decentsoftware.holograms.api.holograms.HologramPage;
 import eu.decentsoftware.holograms.api.utils.collection.DList;
 import fr.yro.llmcraft.Model.IGModel;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -103,14 +104,12 @@ public class HologramTalkingCitizen extends TalkingCitizen {
 
                     models.put(name,newIGStreamModel);
                     this.holograms.put(commandSender.getName(),newHologram);
-                    System.out.print("create full hologram print : ");
-                    printHolo(newHologram);
                 }
                 break;
 
 
             case SHARED:
-                Hologram globalHologram = new Hologram("npc-"+parameters.name+"-global-hologram", this.getLocation());
+                Hologram globalHologram = createBlankHologram("npc-"+parameters.name+"-global-hologram");
                 this.holograms.put("", globalHologram);
         }
     }
@@ -120,6 +119,8 @@ public class HologramTalkingCitizen extends TalkingCitizen {
      * @return
      */
     private Hologram createBlankHologram(String identifier) {
+        Location loc = this.getLocation();
+        loc.setY(loc.getY()+3.5);
         Hologram newHologram = new Hologram(identifier, this.getLocation());
         DHAPI.addHologramLine(newHologram, "empty content");
         System.out.print("create blank hologram print : ");

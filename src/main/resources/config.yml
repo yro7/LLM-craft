@@ -1,6 +1,7 @@
 
 openAI: "your key here"
 anthropic: "your key here"
+hologram-speed: 1
 models:
   city-guard:
     provider: openai

@@ -14,7 +14,7 @@ public class Config {
     public static FileConfiguration config;
     public static String openAI;
     public static String anthropicAPI;
-
+    public static double hologramSpeed;
     public static List<IGModelType.Provider> availableProviders;
     public static boolean provideUsername = true;
 
@@ -26,6 +26,7 @@ public class Config {
 
         openAI = config.getString("openAI");
         anthropicAPI = config.getString("anthropic");
+        hologramSpeed = config.getDouble("hologram-speed");
 
         verifyProviders();
     }
