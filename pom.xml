@@ -130,6 +130,11 @@
                         <configuration>
                             <relocations>
                                 <relocation>
+                                    <pattern>org.bstats</pattern>
+                                    <!-- Replace this with your package! -->
+                                    <shadedPattern>fr.yro</shadedPattern>
+                                </relocation>
+                                <relocation>
                                     <pattern>com.example.dependency</pattern>
                                     <shadedPattern>my.plugin.shaded.com.example.dependency</shadedPattern>
                                 </relocation>

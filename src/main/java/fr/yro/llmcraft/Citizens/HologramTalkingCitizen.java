@@ -1,6 +1,7 @@
 package fr.yro.llmcraft.Citizens;
 
 import eu.decentsoftware.holograms.api.holograms.Hologram;
+import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import fr.yro.llmcraft.Model.IGModel;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -47,18 +48,37 @@ public class HologramTalkingCitizen extends TalkingCitizen {
 
         Hologram hologram = getHologram(commandSender);
         System.out.println("Retrieved hologram for player " + commandSender + " : " + hologram.getName());
-        System.out.println("holograms : " + holograms.entrySet());
+        System.out.println("holograms : " + holograms.keySet());
+
+        /**
+         * chat with hologram logic :
+         * - Launch the IGStreamModel
+         *   at each next token generated, update the hologram
+         */
+
+        /**
+         * update hologram logic :
+         *
+         * - Compute the needed location of the hologram and move if necessary
+         * - compute the formatting
+         * - change formatting
+         */
+
+
+        hologram.addPage();
+        hologram.getPage(0).addLine(new HologramLine(
+                hologram.getPage(0),
+                this.getLocation(),
+                "bonjr cmt cv?"));
+
     }
 
     public Hologram getHologram(CommandSender commandSender){
-
         String identifier = switch(commandSender){
             case Player p -> p.getName();
             default -> "Console";
         };
-
         if(!this.holograms.containsKey(identifier)) createHologram(commandSender);
-
         return this.holograms.get(commandSender.getName());
     }
 
@@ -73,6 +93,14 @@ public class HologramTalkingCitizen extends TalkingCitizen {
                     IGModel newConversationModel = new IGStreamModel(this.getParameters().modelType,
                             identifier, this.getParameters().systemAppend);
                     models.put(name,newConversationModel);
+
+                    Hologram hologram = new Hologram(identifier, this.getLocation());
+                    hologram.setDefaultVisibleState(false);
+                    if(commandSender instanceof Player p) hologram.setShowPlayer(p);
+                    System.out.println("debug : commandsender name : " + commandSender.getName());
+                    this.holograms.put(commandSender.getName(),hologram);
+
+                //    newConversationModel.chat("coucou", commandSender);
                 }
                 break;
 
