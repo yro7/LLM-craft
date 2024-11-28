@@ -11,6 +11,7 @@ import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import eu.decentsoftware.holograms.api.holograms.HologramPage;
 import fr.yro.llmcraft.Config;
 import fr.yro.llmcraft.LLM_craft;
+import fr.yro.llmcraft.Model.ChatLanguageModelBuilder;
 import fr.yro.llmcraft.Model.IGModel;
 import fr.yro.llmcraft.Model.IGModelType;
 import org.bukkit.Bukkit;
@@ -24,12 +25,15 @@ import java.util.List;
 public class IGStreamModel extends IGModel  {
 
 
-    public Assistant assistant;
-    public Hologram hologram;
     interface Assistant {
-
         TokenStream chat(String message);
     }
+
+    public Assistant assistant;
+    public Hologram hologram;
+    public StreamingChatLanguageModel model;
+
+
 
     public IGStreamModel(IGModelType type, String identifier, String systemAppend, Hologram hologram){
         super(type, identifier, systemAppend);
@@ -37,15 +41,13 @@ public class IGStreamModel extends IGModel  {
         this.hologram = hologram;
         this.identifier = identifier;
         this.modelType = type;
-
-        System.out.println("building new ig stream model : ");
-        System.out.println("system prompt : " + type.parameters.systemPrompt);
-        System.out.println("system append : " + systemAppend);
+        this.model = ChatLanguageModelBuilder.buildStream(this.modelType);
         this.assistant = AiServices.builder(Assistant.class)
-                .chatLanguageModel(type.model)
+                .streamingChatLanguageModel(this.model)
                 .chatMemory(chatMemory)
                 .systemMessageProvider(chatMemoryId -> type.parameters.systemPrompt + " " + systemAppend)
                 .build();
+
 
         activeModels.put(identifier,this);
     }
@@ -62,12 +64,7 @@ public class IGStreamModel extends IGModel  {
             @Override
             public void run() {
                     // Start the token stream
-                    StreamingChatLanguageModel model = OpenAiStreamingChatModel.builder()
-                            .apiKey(Config.openAI)
-                            .modelName("gpt-3.5-turbo")
-                            .build();
-                    Assistant assistant = AiServices.create(Assistant.class, model);
-                    TokenStream tokenStream = assistant.chat(prompt);
+                    TokenStream tokenStream = thisModel.assistant.chat(prompt);
                     // Clear the previous message
                     thisModel.clearHologram();
                     // Configure stream handling
@@ -110,21 +107,17 @@ public class IGStreamModel extends IGModel  {
         List<HologramLine> lines = page.getLines();
 
         if (lines.isEmpty()) {
-            System.out.println("lines is empty, adding one with first token :");
             DHAPI.addHologramLine(page, token);
         }
 
         HologramLine line = page.getLines().getLast();
         String lineContent = line.getContent();
-        System.out.println("line content: " + lineContent);
         String newContent = lineContent + token;
         if(newContent.length() > 50){
-            System.out.println("added a line bcs to long");
             DHAPI.addHologramLine(this.hologram, token);
         } else{
             DHAPI.setHologramLine(line, newContent);
         }
-        System.out.println("last line content after adding token: " + lineContent);
     }
 
 

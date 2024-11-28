@@ -35,22 +35,12 @@ public class HologramTalkingCitizen extends TalkingCitizen {
 
     @Override
     public void chat(String s, CommandSender commandSender) {
-        System.out.println("get name debug : " + this.getName());
-
-       // DHAPI.createHologram(this.getName(), this.getLocation());
-
-
-        System.out.println("this hologram : " + this.holograms);
-
-      //  this.holograms.set.getPage(0).setLine(0,"bonjour comment cv hihi");
         chatChat(s, commandSender);
     }
 
     public void chatChat(String s, CommandSender commandSender){
 
         Hologram hologram = getHologram(commandSender);
-        System.out.println("Retrieved hologram for player " + commandSender + " : " + hologram.getName());
-        System.out.println("holograms : " + holograms.keySet());
         /**
          * chat with hologram logic :
          * - Launch the IGStreamModel
@@ -96,8 +86,6 @@ public class HologramTalkingCitizen extends TalkingCitizen {
                     // The hologram must be private for the command sender
                     newHologram.setDefaultVisibleState(false);
                     if(commandSender instanceof Player p) newHologram.setShowPlayer(p);
-                    System.out.println("debug : commandsender name : " + commandSender.getName());
-
                     IGModel newIGStreamModel = new IGStreamModel(this.getParameters().modelType,
                             identifier, this.getParameters().systemAppend,
                             newHologram);

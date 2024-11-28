@@ -35,10 +35,9 @@ public class IGModelType {
      * separate property allows to retrieve later the parameters if needed.
      */
     public IGModelParameters parameters;
-    public ChatLanguageModel model;
     public Limiter limits;
 
-    public IGModelType(String s) throws ProviderUnavailableException {
+    public IGModelType(String s)  {
         this.name = s;
         Logger.log(Level.CONFIG, "Initializing new ModelType " + s);
         Provider provider = Provider.valueOf(configSection.getString(s+".provider").toUpperCase());
@@ -64,40 +63,17 @@ public class IGModelType {
         this.parameters = new IGModelParameters(provider, systemPrompt, persistent, prefix,
                 modelName, temperature, max_tokens, frequencyPenalty, timeOut, visibility);
 
-        if(!Config.availableProviders.contains(provider)){
-            throw new ProviderUnavailableException(provider);
-        }
-
-        switch(provider){
-            case OPENAI:
-                this.model = OpenAiChatModel.builder()
-                        .apiKey(Config.openAI)
-                        .modelName(this.getModelName())
-                        .temperature(this.getTemperature())
-                        .timeout(Duration.of(this.getTO(), ChronoUnit.SECONDS))
-                        .build();
-                break;
-            case ANTHROPIC:
-                this.model = AnthropicChatModel.builder()
-                        .apiKey(Config.anthropicAPI)
-                        .modelName(this.getModelName())
-                        .temperature(this.getTemperature())
-                        .timeout(Duration.of(this.getTO(), ChronoUnit.SECONDS))
-                        .build();
-        }
-
-
     }
 
-    private Double getTemperature() {
+    Double getTemperature() {
         return this.parameters.temperature;
     }
 
-    private long getTO() {
+    long getTO() {
         return this.parameters.timeOut;
     }
 
-    private String getModelName() {
+    String getModelName() {
         return this.parameters.modelName;
     }
 
@@ -109,16 +85,10 @@ public class IGModelType {
         Set<String> modelsPath = configSection.getKeys(false);
 
         for(String modelPath : modelsPath){
-
-            try {
-                IGModelType modelType = new IGModelType(modelPath);
-                res.put(modelPath, modelType);
-
-            } catch (ProviderUnavailableException e) {
-                Logger.log(Level.SEVERE, "ERROR: Provider " + e.getProvider() + " unavailable." +
-                        " Maybe check your api-key in the config ?");
-            }
+            IGModelType modelType = new IGModelType(modelPath);
+            res.put(modelPath, modelType);
         }
+
         return res;
     }
 
@@ -149,18 +119,6 @@ public class IGModelType {
                 "maxTokens: " + this.parameters.maxTokens + "\n";
     }
 
-    public static class ProviderUnavailableException extends Exception {
-
-        IGModelType.Provider provider;
-
-        public ProviderUnavailableException(IGModelType.Provider provider) {
-            this.provider = provider;
-        }
-
-        public IGModelType.Provider getProvider() {
-            return this.provider;
-        }
-    }
 
 
 }

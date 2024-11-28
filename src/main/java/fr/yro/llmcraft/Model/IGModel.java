@@ -2,6 +2,7 @@ package fr.yro.llmcraft.Model;
 
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
+import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.service.AiServices;
 import fr.yro.llmcraft.*;
 import fr.yro.llmcraft.Citizens.Range;
@@ -37,22 +38,29 @@ public class IGModel {
     public IGModelType modelType;
     public String identifier;
     public Assistant assistant;
+    public ChatLanguageModel model;
+
 
     public IGModel(IGModelType type, String identifier){
         this(type,identifier,"");
     }
 
     public IGModel(IGModelType type, String identifier, String systemAppend){
-
         ChatMemory chatMemory = MessageWindowChatMemory.withMaxMessages(10);
         this.identifier = identifier;
         this.modelType = type;
+        try {
+            this.model = ChatLanguageModelBuilder.build(this.modelType);
+            this.assistant = AiServices.builder(Assistant.class)
+                    .chatLanguageModel(this.model)
+                    .chatMemory(chatMemory)
+                    .systemMessageProvider(chatMemoryId -> type.parameters.systemPrompt + " " + systemAppend)
+                    .build();
+        } catch (ChatLanguageModelBuilder.ProviderUnavailableException e) {
+            Logger.log(Level.SEVERE, "ERROR: Provider " + e.getProvider() + " unavailable." +
+                    " Maybe check your api-key in the config ?");
+        }
 
-        this.assistant = AiServices.builder(Assistant.class)
-                .chatLanguageModel(type.model)
-                .chatMemory(chatMemory)
-                .systemMessageProvider(chatMemoryId -> type.parameters.systemPrompt + " " + systemAppend)
-                .build();
         activeModels.put(identifier,this);
     }
 
