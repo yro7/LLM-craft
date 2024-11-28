@@ -3,6 +3,7 @@ package fr.yro.llmcraft.Commands;
 import fr.yro.llmcraft.Citizens.TalkingCitizen;
 import fr.yro.llmcraft.Citizens.TalkingCitizenFactory;
 import fr.yro.llmcraft.Config;
+import fr.yro.llmcraft.LLM_craft;
 import fr.yro.llmcraft.Model.IGModel;
 import fr.yro.llmcraft.Model.IGModelType;
 import fr.yro.llmcraft.Model.Limiter;
@@ -22,6 +23,7 @@ public class Reload
         IGModelType.initialize();
         TalkingCitizenFactory.initialize();
         Limiter.initialize();
+        LLM_craft.removeHolograms();
 
 
         sender.sendMessage("§7* §aLLMCraft successfully reloaded.");
