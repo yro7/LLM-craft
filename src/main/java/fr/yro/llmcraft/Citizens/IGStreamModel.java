@@ -38,12 +38,16 @@ public class IGStreamModel extends IGModel  {
         this.identifier = identifier;
         this.modelType = type;
 
-        StreamingChatLanguageModel model = OpenAiStreamingChatModel.builder()
-                .apiKey(Config.openAI)
-                .modelName("gpt-3.5-turbo")
+        System.out.println("building new ig stream model : ");
+        System.out.println("system prompt : " + type.parameters.systemPrompt);
+        System.out.println("system append : " + systemAppend);
+        this.assistant = AiServices.builder(Assistant.class)
+                .chatLanguageModel(type.model)
+                .chatMemory(chatMemory)
+                .systemMessageProvider(chatMemoryId -> type.parameters.systemPrompt + " " + systemAppend)
                 .build();
 
-        this.assistant = AiServices.create(Assistant.class, model);
+        activeModels.put(identifier,this);
     }
 
     @Override
@@ -69,16 +73,18 @@ public class IGStreamModel extends IGModel  {
                     // Configure stream handling
                     tokenStream
                             .onNext(token -> {
+                                // Ensure thread-safe sending of messages to Bukkit
+                                Bukkit.getScheduler().runTask(LLM_craft.getInstance(), () -> {
+                                    thisModel.updateHologram(token);
+                                });
+
                                 try {
                                     // Wait a bit, so that the response flow looks more natural
                                     Thread.sleep(getTimeToWait(token));
                                 } catch (InterruptedException e) {
                                     throw new RuntimeException(e);
                                 }
-                                // Ensure thread-safe sending of messages to Bukkit
-                                Bukkit.getScheduler().runTask(LLM_craft.getInstance(), () -> {
-                                    thisModel.updateHologram(token);
-                                });
+
                             })
                             .onError(error -> {
                                 // Error handling
@@ -97,9 +103,9 @@ public class IGStreamModel extends IGModel  {
         this.hologram.getPage(0).setLine(1, "");
     }
 
+    // TODO : every x lines, move the hologram up so that lines dont get into the ground/npc.
     public void updateHologram(String token) {
 
-        Hologram holo = this.hologram;
         HologramPage page = this.hologram.getPage(0);
         List<HologramLine> lines = page.getLines();
 
@@ -125,8 +131,9 @@ public class IGStreamModel extends IGModel  {
     // Change the delay between 2 tokens in function of the token.
     public int getTimeToWait(String token){
         return (int) (Config.hologramSpeed*switch(token){
-                    case ".", ";", ",", "?", "!" -> 1000;
-                    default -> 150;
+                    case ".", "?", "!" -> 850;
+                    case ";", "," -> 700;
+                    default -> 100;
                 });
     }
 }

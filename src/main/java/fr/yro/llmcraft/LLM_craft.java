@@ -73,7 +73,7 @@ public final class LLM_craft extends JavaPlugin {
     }
 
 
-    public void removeHolograms(){
+    public static void removeHolograms(){
         TalkingCitizen.talkingCitizens
                 .values()
                 .stream()
