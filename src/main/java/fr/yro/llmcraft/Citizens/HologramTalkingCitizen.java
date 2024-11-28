@@ -121,23 +121,26 @@ public class HologramTalkingCitizen extends TalkingCitizen {
     private Hologram createBlankHologram(String identifier) {
         Location loc = this.getLocation();
         loc.setY(loc.getY()+3.5);
-        Hologram newHologram = new Hologram(identifier, this.getLocation());
+        Hologram newHologram = new Hologram(identifier, loc);
         DHAPI.addHologramLine(newHologram, "empty content");
         System.out.print("create blank hologram print : ");
-        printHolo(newHologram);
         return newHologram;
     }
 
     public static void printHolo(Hologram holo){
-        DList<HologramPage> pages = holo.getPages();
-        System.out.print("hologram n° " + holo.getName());
-        System.out.print("pages : " + pages);
-        HologramPage page0 = pages.getFirst();
-        System.out.print("page 0 : " + page0);
-        List<HologramLine> lines = page0.getLines();
-        System.out.print("lines : " + lines);
-        System.out.print("line 0 : " + lines.getFirst());
-        System.out.print("line 0 content : " + lines.getFirst().getContent());
+        try{
+            DList<HologramPage> pages = holo.getPages();
+            System.out.print("hologram n° " + holo.getName());
+            System.out.print("pages : " + pages);
+            HologramPage page0 = pages.getFirst();
+            System.out.print("page 0 : " + page0);
+            List<HologramLine> lines = page0.getLines();
+            System.out.print("lines : " + lines);
+            System.out.print("line 0 : " + lines.getFirst());
+            System.out.print("line 0 content : " + lines.getFirst().getContent());
+        } catch(Exception e){
+            System.out.println("shady exception idk");
+        }
 
     }
 }
