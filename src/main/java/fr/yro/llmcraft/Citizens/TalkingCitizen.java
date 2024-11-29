@@ -78,7 +78,7 @@ public abstract class TalkingCitizen  {
 
 
 
-    TalkingCitizenParameters getParameters() {
+    protected TalkingCitizenParameters getParameters() {
         return this.parameters;
     }
 

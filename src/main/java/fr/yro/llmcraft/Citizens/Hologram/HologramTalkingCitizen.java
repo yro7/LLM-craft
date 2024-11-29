@@ -1,10 +1,12 @@
-package fr.yro.llmcraft.Citizens;
+package fr.yro.llmcraft.Citizens.Hologram;
 
 import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import eu.decentsoftware.holograms.api.holograms.HologramPage;
 import eu.decentsoftware.holograms.api.utils.collection.DList;
+import fr.yro.llmcraft.Citizens.TalkingCitizen;
+import fr.yro.llmcraft.Citizens.TalkingCitizenParameters;
 import fr.yro.llmcraft.Model.IGModel;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -88,7 +90,7 @@ public class HologramTalkingCitizen extends TalkingCitizen {
                     if(commandSender instanceof Player p) newHologram.setShowPlayer(p);
                     IGModel newIGStreamModel = new IGStreamModel(this.getParameters().modelType,
                             identifier, this.getParameters().systemAppend,
-                            newHologram);
+                            newHologram, this.extractColor());
 
                     models.put(name,newIGStreamModel);
                     this.holograms.put(commandSender.getName(),newHologram);
@@ -97,7 +99,7 @@ public class HologramTalkingCitizen extends TalkingCitizen {
 
 
             case SHARED:
-                Hologram globalHologram = createBlankHologram("npc-"+parameters.name+"-global-hologram");
+                Hologram globalHologram = createBlankHologram("npc-"+this.getParameters().name+"-global-hologram");
                 this.holograms.put("", globalHologram);
         }
     }
@@ -110,8 +112,7 @@ public class HologramTalkingCitizen extends TalkingCitizen {
         Location loc = this.getLocation();
         loc.setY(loc.getY()+3.5);
         Hologram newHologram = new Hologram(identifier, loc);
-        DHAPI.addHologramLine(newHologram, "empty content");
-        System.out.print("create blank hologram print : ");
+        DHAPI.addHologramLine(newHologram, "");
         return newHologram;
     }
 
@@ -130,5 +131,15 @@ public class HologramTalkingCitizen extends TalkingCitizen {
             System.out.println("shady exception idk");
         }
 
+    }
+
+    /** TODO : Tries to retrieve a color to paint the hologram with.
+     * The color is retrieved from the name of the NPC: example, if the NPC is named
+     * "§e§lBlacksmith" the return value will be "§e"
+     * @return A Minecraft color-code formatted string (e.g. §e for yellow, §4 for red...)
+     *
+     */
+    public String extractColor(){
+       return "§e";
     }
 }

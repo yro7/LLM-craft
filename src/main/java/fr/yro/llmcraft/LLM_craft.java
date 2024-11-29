@@ -1,6 +1,6 @@
 package fr.yro.llmcraft;
 
-import fr.yro.llmcraft.Citizens.HologramTalkingCitizen;
+import fr.yro.llmcraft.Citizens.Hologram.HologramTalkingCitizen;
 import fr.yro.llmcraft.Citizens.NPCListener;
 import fr.yro.llmcraft.Citizens.TalkingCitizen;
 import fr.yro.llmcraft.Citizens.TalkingCitizenFactory;
@@ -11,10 +11,6 @@ import fr.yro.llmcraft.Model.Limiter;
 import fr.yro.llmcraft.Model.ListeningModel;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
-import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;

@@ -1,11 +1,10 @@
 package fr.yro.llmcraft.Citizens;
 
+import fr.yro.llmcraft.Citizens.Hologram.HologramTalkingCitizen;
 import fr.yro.llmcraft.Config;
 import fr.yro.llmcraft.Logger;
-import fr.yro.llmcraft.Model.IGModel;
 import fr.yro.llmcraft.Model.IGModelType;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 
