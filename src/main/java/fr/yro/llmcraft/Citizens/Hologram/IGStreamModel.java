@@ -64,14 +64,16 @@ public class IGStreamModel extends IGModel  {
     @Override
     public void chat(String prompt, CommandSender sender) {
 
-
         IGStreamModel thisModel = this;
         String answer = "";
 
         if(!this.canUse(sender)){
             answer = this.modelType.parameters.prefix + this.getDenyMessage();
+            sender.sendMessage(answer);
+            return;
 
         }
+
         else{
             this.use(sender);
         }

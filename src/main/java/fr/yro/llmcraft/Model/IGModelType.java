@@ -44,20 +44,22 @@ public class IGModelType {
         int max_tokens = configSection.getInt(s+".max-tokens");
         double frequencyPenalty = configSection.getDouble(s+".frequency-penalty");
         int timeOut = configSection.getInt(s+".time-out");
-        String visibilityString = configSection.getString(s+".visibility");
+        String visibilityString = configSection.getString(s+".visibility").toUpperCase();
 
         this.limits = Limiter.limiters.get(s);
 
-        IGModelParameters.Visibility visibility;
-        try{
-          visibility = IGModelParameters.Visibility.valueOf(visibilityString.toUpperCase());
-        } catch(Exception e){
-            visibility = IGModelParameters.Visibility.PERSONAL;
-        }
+        IGModelParameters.Visibility visibility = visibilityFromString(visibilityString);
 
         this.parameters = new IGModelParameters(provider, systemPrompt, persistent, prefix,
                 modelName, temperature, max_tokens, frequencyPenalty, timeOut, visibility);
 
+    }
+
+    private IGModelParameters.Visibility visibilityFromString(String visibilityString) {
+        return switch(visibilityString){
+            case "SHARED", "PUBLIC" -> IGModelParameters.Visibility.SHARED;
+            default -> IGModelParameters.Visibility.PERSONAL;
+        };
     }
 
     Double getTemperature() {

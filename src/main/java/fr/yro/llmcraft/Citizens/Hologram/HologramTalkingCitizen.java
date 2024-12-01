@@ -35,13 +35,6 @@ public class HologramTalkingCitizen extends TalkingCitizen {
     }
 
 
-
-    @Override
-    public void chat(String s, CommandSender commandSender) {
-        if(!this.holograms.containsKey("")) createGlobalHologram();
-        chatChat(s, commandSender);
-    }
-
     private void createGlobalHologram() {
         Hologram globalHologram = createBlankHologram("npc-"+this.getParameters().name+"-global-hologram");
         this.holograms.put("", globalHologram);
@@ -49,10 +42,6 @@ public class HologramTalkingCitizen extends TalkingCitizen {
         IGModel globalModel = new IGStreamModel(params.modelType,"npc-"+params.name+"-global",
                 params.systemAppend,globalHologram, this.extractColor(), this.getBaseY());
         this.models.put("", globalModel);
-    }
-
-    public void chatChat(String s, CommandSender commandSender){
-        this.getModel(commandSender).chat(s,commandSender);
     }
 
     public Hologram getHologram(CommandSender commandSender){

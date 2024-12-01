@@ -38,7 +38,12 @@ public abstract class TalkingCitizen  {
         this.parameters = parameters;
     }
 
-    public abstract void chat(String s, CommandSender commandSender);
+    public void abstract createModel();
+
+
+    public void chat(String s, CommandSender commandSender){
+        this.getModel(commandSender).chat(s,commandSender);
+    }
 
     /**
      *
@@ -50,10 +55,11 @@ public abstract class TalkingCitizen  {
         switch(this.getParameters().modelType.parameters.visibility){
             case PERSONAL:
 
-                String identifier = this.getIdentifier(commandSender);
                 String name = commandSender.getName();
-
                 if(!models.containsKey(name)){
+                    String identifier = this.getIdentifier(commandSender);
+                    System.out.println("DEBUG LINE CREATE MODEL: TC : " + this);
+                    res = CreateModel();
                     res = new IGModel(this.getParameters().modelType,
                             identifier, this.getParameters().systemAppend);
                     models.put(name,res);
@@ -130,6 +136,8 @@ public abstract class TalkingCitizen  {
     public Range getRange(){
         return this.getParameters().range;
     }
+
+
 
     protected String getIdentifier(CommandSender commandSender) {
         return "npc-"+this.getParameters().name+"-"+commandSender.getName();

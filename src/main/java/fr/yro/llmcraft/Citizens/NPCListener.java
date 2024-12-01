@@ -37,6 +37,7 @@ public class NPCListener implements Listener {
             int radius = tc.getRange().range;
 
             if(tc.getLocation().distance(loc) < radius) {
+                System.out.println("DEBUG LINE LISTENER : TC : " + tc);
                 tc.chat(e.getMessage(), e.getPlayer());
                 if (tc.messageOnlyInRange()) {
                     e.getRecipients().removeIf(p -> p.getLocation().distance(loc) > radius);

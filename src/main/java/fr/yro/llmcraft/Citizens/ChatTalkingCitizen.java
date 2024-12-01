@@ -11,13 +11,5 @@ public class ChatTalkingCitizen extends TalkingCitizen{
         this.models.put("", model);
     }
 
-    @Override
-    public void chat(String s, CommandSender commandSender){
-            chatChat(s, commandSender);
-    }
-
-    public void chatChat(String s, CommandSender commandSender){
-        this.getModel(commandSender).chat(s, commandSender);
-    }
 
 }
