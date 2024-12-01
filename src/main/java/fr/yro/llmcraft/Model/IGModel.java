@@ -65,17 +65,17 @@ public class IGModel {
     }
 
 
-    /**
-     * Handles all LLM's generating procedures.
-     * An {@link IGModel} always consumes a {@link CommandSender} for chatting.
-     * If you want to get answer's String, you can use {@link #answer}.
-     * @param prompt The initial prompt
-     * @param sender The commandSender (Player or Console) who triggered the action.
-     */
-
     public void chat(String prompt, CommandSender sender){
         chat(prompt, sender, Range.GLOBAL);
     }
+
+    /**
+     * Handles all LLM's generating procedures.
+     * An {@link IGModel} always consumes a {@link CommandSender} for chatting.
+     * If you want to get answer's String, you can use {@link #getAnswer(CommandSender, String)}.
+     * @param prompt The initial prompt
+     * @param sender The commandSender (Player or Console) who triggered the action.
+     */
 
     public void chat(String prompt, CommandSender sender, Range range) {
         IGModel model = this;
@@ -86,60 +86,37 @@ public class IGModel {
             else user = "Console Administrator";
             prompt = user + ": " + prompt;
         }
-
-        String finalPrompt = prompt;
-
-        Predicate<Player> rangeManager = player -> {
-            if(range.type == GLOBAL) return true;
-            if(!(sender instanceof Player p)) return false;
-            else return(player.getLocation().distance(p.getLocation()) < range.range);
-        };
+        Predicate<Player> rangeManager = this.getRangeManager(sender, range);
+        final String finalPrompt = prompt;
 
         new BukkitRunnable() {
             @Override
             public void run() {
                 Logger.log(Level.INFO, "Generating answer for prompt " + finalPrompt);
-                String answer;
-                if(!model.canUse(sender)){
-                    answer = model.modelType.parameters.prefix + model.getDenyMessage();
+                String answer = getAnswer(sender, finalPrompt);
 
-                }
-                else{
-                    model.use(sender);
-                    answer = model.modelType.parameters.prefix + model.assistant.chat(finalPrompt);
-                }
+                // If it's the console, send the message with .sendMessage
                 sender.sendMessage(answer);
-                if(!model.isPrivate()) Bukkit.getOnlinePlayers()
-                        .stream()
-                        .filter(p -> !p.equals(sender)) // Avoids to send the message 2x for the commandSender
-                        .filter(rangeManager)
-                        .forEach(p -> p.sendMessage(answer));
+
+                if(!model.isPrivate()) {
+                    Bukkit.getOnlinePlayers()
+                            .stream()
+                            .filter(rangeManager)
+                            .filter(p -> p != sender)
+                            .forEach(p -> p.sendMessage(answer));
+                }
             }
         }.runTaskAsynchronously(LLM_craft.getInstance());
 
     }
 
+    public Predicate<Player> getRangeManager(CommandSender sender, Range range) {
+        return player -> {
+            if(range.type == GLOBAL) return true;
+            if(!(sender instanceof Player p)) return false;
+            else return(player.getLocation().distance(p.getLocation()) < range.range);
+        };
 
-    /**
-     *
-     * @return The generated answer by the IGModel.
-     */
-    public String answer(String prompt){
-        IGModel model = this;
-        final String[] answer = new String[1];
-        new BukkitRunnable(){
-
-            @Override
-            public void run() {
-                answer[0] =  model.modelType.parameters.prefix + model.assistant.chat(prompt);
-            }
-        }.runTaskAsynchronously(LLM_craft.getInstance());
-
-        return answer[0];
-    }
-
-    public String getPrefix() {
-        return this.modelType.parameters.prefix;
     }
 
     public static void createModel(IGModelType type, String identifier){
@@ -164,7 +141,7 @@ public class IGModel {
     }
 
     public boolean isPrivate(){
-        return this.modelType.parameters.visibility.equals(IGModelParameters.Visibility.PRIVATE);
+        return this.modelType.parameters.visibility.equals(IGModelParameters.Visibility.PERSONAL);
     }
 
     public boolean canUse(CommandSender sender){
@@ -187,6 +164,20 @@ public class IGModel {
 
     public String toString(){
         return "Model " + this.identifier + " : type " + this.modelType.name;
+    }
+
+    public String getAnswer(CommandSender sender, String finalPrompt){
+        String answer = "";
+        if(this.canUse(sender)){
+            this.use(sender);
+            answer = this.modelType.parameters.prefix + this.assistant.chat(finalPrompt);
+
+        }
+        else{
+            answer = this.modelType.parameters.prefix + this.getDenyMessage();
+        }
+
+        return answer;
     }
 
 

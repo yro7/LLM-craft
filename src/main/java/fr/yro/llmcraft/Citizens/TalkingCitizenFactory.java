@@ -54,7 +54,6 @@ public class TalkingCitizenFactory {
                     "Maybe check your API Key or the name of the model in config.yml ?");
             return null;
         }
-        parameters.type = TalkingCitizenParameters.Privacy.valueOf(configSection.getString(s+".type").toUpperCase());
         parameters.npcID = configSection.getInt(s+".citizen-id");
         parameters.messageOnlyInRange = configSection.getBoolean(s+".message-only-in-range");
         parameters.systemAppend = configSection.getString(s+".system-append");

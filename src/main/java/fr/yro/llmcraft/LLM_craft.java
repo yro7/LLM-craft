@@ -1,6 +1,10 @@
 package fr.yro.llmcraft;
 
+import dev.langchain4j.service.OnCompleteOrOnError;
+import dev.langchain4j.service.TokenStream;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
 import fr.yro.llmcraft.Citizens.Hologram.HologramTalkingCitizen;
+import fr.yro.llmcraft.Citizens.Hologram.IGStreamModel;
 import fr.yro.llmcraft.Citizens.NPCListener;
 import fr.yro.llmcraft.Citizens.TalkingCitizen;
 import fr.yro.llmcraft.Citizens.TalkingCitizenFactory;
@@ -14,6 +18,7 @@ import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 public final class LLM_craft extends JavaPlugin {
 
@@ -74,7 +79,21 @@ public final class LLM_craft extends JavaPlugin {
                 .values()
                 .stream()
                 .filter(tc -> tc instanceof HologramTalkingCitizen)
-                .forEach(tc -> ((HologramTalkingCitizen) tc).holograms.values()
-                        .forEach(holo -> holo.delete()));
+                .forEach(tc ->{
+                    // Remove the remaining holograms
+                    HologramTalkingCitizen htc = (HologramTalkingCitizen) tc;
+                    htc.holograms.values().forEach(Hologram::delete);
+
+                    // Replace all TokenStreams by "do nothing" streams to stop generation
+                    htc.models.values().stream()
+                            .filter(model -> model instanceof IGStreamModel)
+                            .forEach(igModel -> ((IGStreamModel) igModel).lastTokenStream.set(new TokenStream() {
+                                @Override
+                                public OnCompleteOrOnError onNext(Consumer<String> consumer) {
+                                    return null;
+                                }
+                            }));
+
+                });
     }
 }

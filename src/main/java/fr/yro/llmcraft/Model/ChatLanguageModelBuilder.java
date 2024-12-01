@@ -20,7 +20,6 @@ public class ChatLanguageModelBuilder {
     // TODO: use reflection to generify the 2 methods ?
     public static ChatLanguageModel build(IGModelType igModelType) throws ProviderUnavailableException {
         IGModelType.Provider provider = igModelType.parameters.provider;
-
         if(!Config.availableProviders.contains(provider)){
             throw new ProviderUnavailableException(provider);
         }

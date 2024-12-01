@@ -15,6 +15,7 @@ import java.util.HashMap;
 public class Reload
 {
     public static void reload(CommandSender sender){
+        LLM_craft.removeHolograms();
         Config.load();
         IGModel.activeModels = new HashMap<>();
         ListeningModel.listeningModels = new HashMap<>();
@@ -23,7 +24,6 @@ public class Reload
         IGModelType.initialize();
         TalkingCitizenFactory.initialize();
         Limiter.initialize();
-        LLM_craft.removeHolograms();
 
 
         sender.sendMessage("§7* §aLLMCraft successfully reloaded.");

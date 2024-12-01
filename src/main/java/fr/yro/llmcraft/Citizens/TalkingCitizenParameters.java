@@ -11,16 +11,10 @@ import org.bukkit.Location;
  */
 public class TalkingCitizenParameters  {
 
-    public enum Privacy {
-        PERSONAL,
-        SHARED
-    }
-
     public String name;
     public int npcID;
     public IGModelType modelType;
     public String systemAppend;
-    public Privacy type;
     public Range range;
     public boolean messageOnlyInRange;
 
@@ -35,38 +29,6 @@ public class TalkingCitizenParameters  {
      * If the player is in range of the NPC : when the player sends a message, should the message only be sent to players in the radius of the NPC, or should everyone should be able to hear it?
      *
      */
-    public boolean messageOnlyInRange() {
-        return this.messageOnlyInRange;
-    }
 
-
-    public Location getLocation(){
-        return this.getNPC().getEntity().getLocation();
-    }
-
-    private boolean isShared() {
-        return this.type == Privacy.SHARED;
-    }
-
-
-    public Range getRange(){
-        return this.range;
-    }
-
-    public Privacy getPrivacy(){
-        return this.type;
-    }
-
-    protected String getName() {
-        return this.name;
-    }
-
-    public IGModelType getModelType(){
-        return this.modelType;
-    }
-
-    public String getSystemAppend(){
-        return this.systemAppend;
-    }
 
 }

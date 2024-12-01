@@ -8,6 +8,7 @@ import eu.decentsoftware.holograms.api.utils.collection.DList;
 import fr.yro.llmcraft.Citizens.TalkingCitizen;
 import fr.yro.llmcraft.Citizens.TalkingCitizenParameters;
 import fr.yro.llmcraft.Model.IGModel;
+import fr.yro.llmcraft.Model.IGModelParameters;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -37,26 +38,20 @@ public class HologramTalkingCitizen extends TalkingCitizen {
 
     @Override
     public void chat(String s, CommandSender commandSender) {
+        if(!this.holograms.containsKey("")) createGlobalHologram();
         chatChat(s, commandSender);
     }
 
+    private void createGlobalHologram() {
+        Hologram globalHologram = createBlankHologram("npc-"+this.getParameters().name+"-global-hologram");
+        this.holograms.put("", globalHologram);
+        TalkingCitizenParameters params = this.getParameters();
+        IGModel globalModel = new IGStreamModel(params.modelType,"npc-"+params.name+"-global",
+                params.systemAppend,globalHologram, this.extractColor(), this.getBaseY());
+        this.models.put("", globalModel);
+    }
+
     public void chatChat(String s, CommandSender commandSender){
-
-        Hologram hologram = getHologram(commandSender);
-        /**
-         * chat with hologram logic :
-         * - Launch the IGStreamModel
-         *   at each next token generated, update the hologram
-         */
-
-        /**
-         * update hologram logic :
-         *
-         * - Compute the needed location of the hologram and move if necessary
-         * - compute the formatting
-         * - change formatting
-         */
-
         this.getModel(commandSender).chat(s,commandSender);
     }
 
@@ -65,7 +60,13 @@ public class HologramTalkingCitizen extends TalkingCitizen {
             case Player p -> p.getName();
             default -> "Console";
         };
+        // If it's a shared model, return the global hologram :
+        if(this.getVisibility().equals(IGModelParameters.Visibility.SHARED)) return this.holograms.get("");
+
         if(!this.holograms.containsKey(identifier)) createHologram(commandSender);
+
+
+        // If it's a private, return the hologram identified by commandSender's name
         return this.holograms.get(commandSender.getName());
     }
 
@@ -75,7 +76,7 @@ public class HologramTalkingCitizen extends TalkingCitizen {
      * @param commandSender
      */
     public void createHologram(CommandSender commandSender){
-        switch(this.getParameters().type){
+        switch(this.getVisibility()){
             case PERSONAL:
                 String identifier = this.getIdentifier(commandSender);
                 String name = commandSender.getName();
@@ -90,7 +91,7 @@ public class HologramTalkingCitizen extends TalkingCitizen {
                     if(commandSender instanceof Player p) newHologram.setShowPlayer(p);
                     IGModel newIGStreamModel = new IGStreamModel(this.getParameters().modelType,
                             identifier, this.getParameters().systemAppend,
-                            newHologram, this.extractColor());
+                            newHologram, this.extractColor(),this.getBaseY());
 
                     models.put(name,newIGStreamModel);
                     this.holograms.put(commandSender.getName(),newHologram);
@@ -110,7 +111,8 @@ public class HologramTalkingCitizen extends TalkingCitizen {
      */
     private Hologram createBlankHologram(String identifier) {
         Location loc = this.getLocation();
-        loc.setY(loc.getY()+3.5);
+        loc.setY(getBaseY());
+        System.out.print("creating new hologram with name : " + identifier);
         Hologram newHologram = new Hologram(identifier, loc);
         DHAPI.addHologramLine(newHologram, "");
         return newHologram;
@@ -141,5 +143,9 @@ public class HologramTalkingCitizen extends TalkingCitizen {
      */
     public String extractColor(){
        return "§e";
+    }
+
+    public double getBaseY(){
+        return this.getLocation().getY()+3.5;
     }
 }

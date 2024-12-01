@@ -7,6 +7,8 @@ public class ChatTalkingCitizen extends TalkingCitizen{
 
     public ChatTalkingCitizen(TalkingCitizenParameters parameters) {
         super(parameters);
+        IGModel model = new IGModel(parameters.modelType,"npc-"+parameters.name+"-global", parameters.systemAppend);
+        this.models.put("", model);
     }
 
     @Override

@@ -5,8 +5,8 @@ import java.util.Objects;
 public class IGModelParameters {
 
     public enum Visibility {
-        PRIVATE,
-        PUBLIC
+        PERSONAL,
+        SHARED
     }
 
     public IGModelType.Provider provider;
@@ -31,7 +31,7 @@ public class IGModelParameters {
         this.maxTokens = Objects.requireNonNullElse(max_tokens, 1000);
         this.frequencyPenalty = Objects.requireNonNullElse(frequency_penalty, Double.valueOf(0));
         this.timeOut = Objects.requireNonNullElse(timeOut, 60);
-        this.visibility = Objects.requireNonNullElse(visibility, Visibility.PRIVATE);
+        this.visibility = Objects.requireNonNullElse(visibility, Visibility.PERSONAL);
         this.provider = provider;
 
     }

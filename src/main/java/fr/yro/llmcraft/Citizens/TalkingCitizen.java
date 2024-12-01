@@ -1,7 +1,7 @@
 package fr.yro.llmcraft.Citizens;
 
 import fr.yro.llmcraft.Model.IGModel;
-import fr.yro.llmcraft.Model.IGModelType;
+import fr.yro.llmcraft.Model.IGModelParameters;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
@@ -9,8 +9,6 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
 import java.util.*;
-
-import static fr.yro.llmcraft.Citizens.TalkingCitizenParameters.Privacy.SHARED;
 
 /**
  * Represents Citizen's NPC talking to you through one of your models.
@@ -37,11 +35,6 @@ public abstract class TalkingCitizen  {
 
     public TalkingCitizen(TalkingCitizenParameters parameters) {
         this.models = new HashMap<>();
-        // Creates a "global" model identified with the empty string in models.
-        // It is the model that will be used if the TalkingCitizen is shared between all players.
-        IGModel model = new IGModel(parameters.modelType,"npc-"+parameters.name+"-global", parameters.systemAppend);
-        this.models.put("", model);
-
         this.parameters = parameters;
     }
 
@@ -54,7 +47,7 @@ public abstract class TalkingCitizen  {
      */
     public IGModel getModel(CommandSender commandSender){
         IGModel res = null;
-        switch(this.getParameters().type){
+        switch(this.getParameters().modelType.parameters.visibility){
             case PERSONAL:
 
                 String identifier = this.getIdentifier(commandSender);
@@ -116,7 +109,7 @@ public abstract class TalkingCitizen  {
 
     public String  toString(){
         return "Talking NPC " + this.getParameters().name + " Talking-Type:" + this.getTalkingType()
-                + ". Model-Type : " + this.getParameters().modelType + ". Shared: " + this.getParameters().type +
+                + ". Model-Type : " + this.getParameters().modelType + ". Shared: " + this.getParameters().modelType.parameters.visibility +
                 "\nCurrent number of conversations hold: " + this.models.size();
     }
 
@@ -125,9 +118,6 @@ public abstract class TalkingCitizen  {
         else return "Hologram-Talking";
     }
 
-    private boolean isShared() {
-        return this.getParameters().type == SHARED;
-    }
 
     public static boolean isTalkingCitizen(NPC npc){
         return talkingCitizens.containsKey(npc);
@@ -141,23 +131,11 @@ public abstract class TalkingCitizen  {
         return this.getParameters().range;
     }
 
-    public TalkingCitizenParameters.Privacy getPrivacy(){
-        return this.getParameters().type;
-    }
-
-    protected String getName() {
-        return this.getParameters().name;
-    }
-
-    public IGModelType getModelType(){
-        return this.getParameters().modelType;
-    }
-
-    public String getSystemAppend(){
-        return this.getParameters().systemAppend;
-    }
-
     protected String getIdentifier(CommandSender commandSender) {
         return "npc-"+this.getParameters().name+"-"+commandSender.getName();
+    }
+
+    public IGModelParameters.Visibility getVisibility(){
+        return this.parameters.modelType.parameters.visibility;
     }
 }

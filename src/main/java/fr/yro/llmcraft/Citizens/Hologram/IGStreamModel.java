@@ -18,6 +18,7 @@ import kotlin.text.Regex;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Arrays;
@@ -38,11 +39,12 @@ public class IGStreamModel extends IGModel  {
     public StreamingChatLanguageModel model;
     public String color;
     public final AtomicReference<TokenStream> lastTokenStream = new AtomicReference<>(null);
+    public double baseY;
 
 
 
 
-    public IGStreamModel(IGModelType type, String identifier, String systemAppend, Hologram hologram, String color){
+    public IGStreamModel(IGModelType type, String identifier, String systemAppend, Hologram hologram, String color, double y){
         super(type, identifier, systemAppend);
         ChatMemory chatMemory = MessageWindowChatMemory.withMaxMessages(10);
         this.hologram = hologram;
@@ -55,23 +57,37 @@ public class IGStreamModel extends IGModel  {
                 .systemMessageProvider(chatMemoryId -> type.parameters.systemPrompt + " " + systemAppend)
                 .build();
         this.color = color;
+        this.baseY = y;
         activeModels.put(identifier,this);
     }
 
     @Override
-    public void chat(String prompt, CommandSender sender){
-        streamChat(prompt, sender);
-    }
+    public void chat(String prompt, CommandSender sender) {
 
-    public void streamChat(String prompt, CommandSender sender) {
+
         IGStreamModel thisModel = this;
-        // Cancel any existing stream
+        String answer = "";
 
+        if(!this.canUse(sender)){
+            answer = this.modelType.parameters.prefix + this.getDenyMessage();
+
+        }
+        else{
+            this.use(sender);
+        }
+
+        if(Config.provideUsername) {
+            if (sender instanceof Entity e) prompt = e.getName() + ": " + prompt;
+            else prompt =  "Console : " + prompt;
+        }
+
+
+        String finalPrompt = prompt;
         new BukkitRunnable() {
             @Override
             public void run() {
                     // Start the token stream
-                    TokenStream tokenStream = thisModel.assistant.chat(prompt);
+                    TokenStream tokenStream = thisModel.assistant.chat(finalPrompt);
                     thisModel.lastTokenStream.set(tokenStream);
                     // Clear the previous message
                     thisModel.clearHologram();
@@ -81,7 +97,7 @@ public class IGStreamModel extends IGModel  {
                                 // Ensure thread-safe sending of messages to Bukkit
                                 Bukkit.getScheduler().runTask(LLM_craft.getInstance(), () -> {
                                     // If the token stream is not the last one, then do nothing
-                                    // (or else it will override the last token stream and make a mess)
+                                    // (it would concur the last token stream and make a mess)
                                     if(lastTokenStream.get() != tokenStream) return;
                                     thisModel.updateHologram(token);
                                 });
@@ -108,20 +124,15 @@ public class IGStreamModel extends IGModel  {
     /** Clear the hologram and put it at base location (see {@link #moveHologramIfNeeded}).
      */
     public void clearHologram() {
-        int linesSize = this.hologram.getPage(0).getLines().size();
         this.hologram.removePage(0);
         this.hologram.addPage();
         this.hologram.getPage(0).setLine(1, "");
         Location loc = this.hologram.getLocation();
-        if(linesSize > 1){
-            double correction = 1.2*(Math.max(linesSize/4,0));
-            if(linesSize == 4) correction = 1;
-            loc.setY(loc.getY() - correction);
-        }
+        loc.setY(baseY);
     }
 
     public void updateHologram(String token) {
-        // Replace non printable characters by a space
+        // Replace non-printable characters by a space
         token = token.replaceAll("[\\p{Cc}\\p{Cf}\\p{Co}\\p{Cn}]", " ");
         HologramPage page = this.hologram.getPage(0);
         List<HologramLine> lines = page.getLines();
@@ -144,12 +155,14 @@ public class IGStreamModel extends IGModel  {
     private void moveHologramIfNeeded(Hologram hologram) {
         List<HologramLine> lines = hologram.getPage(0).getLines();
         // 4 lines is the distance between the top of the hologram and NPC's name
-        // (1.2 blocks)
+        // (roughly 1.2 blocks)
         if(lines.size() > 1 && lines.size() % 4 == 0){
             Location loc = this.hologram.getLocation();
             loc.setY(loc.getY()+1.2);
         }
     }
+
+
 
 
     // Change the delay between 2 tokens in function of the token.

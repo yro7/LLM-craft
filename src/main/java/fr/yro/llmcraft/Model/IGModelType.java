@@ -1,14 +1,9 @@
 package fr.yro.llmcraft.Model;
 
-import dev.langchain4j.model.anthropic.AnthropicChatModel;
-import dev.langchain4j.model.chat.ChatLanguageModel;
-import dev.langchain4j.model.openai.OpenAiChatModel;
 import fr.yro.llmcraft.Config;
 import fr.yro.llmcraft.Logger;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.logging.Level;
@@ -57,7 +52,7 @@ public class IGModelType {
         try{
           visibility = IGModelParameters.Visibility.valueOf(visibilityString.toUpperCase());
         } catch(Exception e){
-            visibility = IGModelParameters.Visibility.PRIVATE;
+            visibility = IGModelParameters.Visibility.PERSONAL;
         }
 
         this.parameters = new IGModelParameters(provider, systemPrompt, persistent, prefix,
