@@ -1,5 +1,6 @@
 package fr.yro.llmcraft.Citizens;
 
+import fr.yro.llmcraft.Model.IGModelParameters;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
@@ -37,9 +38,11 @@ public class NPCListener implements Listener {
             int radius = tc.getRange().range;
 
             if(tc.getLocation().distance(loc) < radius) {
-                System.out.println("DEBUG LINE LISTENER : TC : " + tc);
                 tc.chat(e.getMessage(), e.getPlayer());
                 if (tc.messageOnlyInRange()) {
+                    if(tc.isPrivate()){
+                        e.getRecipients().removeIf(p -> p != e.getPlayer());
+                    }
                     e.getRecipients().removeIf(p -> p.getLocation().distance(loc) > radius);
                 }
             }

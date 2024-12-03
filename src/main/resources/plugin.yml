@@ -37,3 +37,20 @@ commands:
     description: "Get info on a model type"
     usage: "§a/modeltypes <type>"
     permission: llmcraft.modeltype
+## Limiter commands
+  limits:
+    description: "Get info on a model type's usage limitations"
+    usage: "§a/limits <type>"
+    permission: llmcraft.limits
+  limit:
+    description: "Get info on a model type's usage limitations"
+    usage: "§a/limits <type>"
+    permission: llmcraft.limits
+  limiter:
+    description: "Get info on a model type's usage limitations"
+    usage: "§a/limits <type>"
+    permission: llmcraft.limits
+  limiters:
+    description: "Get info on a model type's usage limitations"
+    usage: "§a/limits <type>"
+    permission: llmcraft.limits

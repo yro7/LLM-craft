@@ -34,31 +34,13 @@ public class HologramTalkingCitizen extends TalkingCitizen {
         this.holograms = new HashMap<>();
     }
 
-
-    private void createGlobalHologram() {
-        Hologram globalHologram = createBlankHologram("npc-"+this.getParameters().name+"-global-hologram");
-        this.holograms.put("", globalHologram);
-        TalkingCitizenParameters params = this.getParameters();
-        IGModel globalModel = new IGStreamModel(params.modelType,"npc-"+params.name+"-global",
-                params.systemAppend,globalHologram, this.extractColor(), this.getBaseY());
-        this.models.put("", globalModel);
+    @Override
+    public IGModel createModel(CommandSender sender) {
+        createGlobalModel();
+        return new IGStreamModel(this.getParameters().modelType,
+                getIdentifier(sender), this.getParameters().systemAppend,
+                this.getHologram(sender),this.extractColor(),this.getBaseY());
     }
-
-    public Hologram getHologram(CommandSender commandSender){
-        String identifier = switch(commandSender){
-            case Player p -> p.getName();
-            default -> "Console";
-        };
-        // If it's a shared model, return the global hologram :
-        if(this.getVisibility().equals(IGModelParameters.Visibility.SHARED)) return this.holograms.get("");
-
-        if(!this.holograms.containsKey(identifier)) createHologram(commandSender);
-
-
-        // If it's a private, return the hologram identified by commandSender's name
-        return this.holograms.get(commandSender.getName());
-    }
-
 
     /**
      * Creates a {@link Hologram} for a {@link CommandSender}, and puts it in the {@link #holograms} hashmap.
@@ -86,12 +68,36 @@ public class HologramTalkingCitizen extends TalkingCitizen {
                     this.holograms.put(commandSender.getName(),newHologram);
                 }
                 break;
-
-
             case SHARED:
                 Hologram globalHologram = createBlankHologram("npc-"+this.getParameters().name+"-global-hologram");
                 this.holograms.put("", globalHologram);
         }
+    }
+
+
+    public void createGlobalModel() {
+        if(this.models.containsKey("")) return;
+        Hologram globalHologram = createBlankHologram("npc-"+this.getParameters().name+"-global-hologram");
+        this.holograms.put("", globalHologram);
+        TalkingCitizenParameters params = this.getParameters();
+        IGModel globalModel = new IGStreamModel(params.modelType,"npc-"+params.name+"-global",
+                params.systemAppend,globalHologram, this.extractColor(), this.getBaseY());
+        this.models.put("", globalModel);
+    }
+
+    public Hologram getHologram(CommandSender commandSender){
+        String identifier = switch(commandSender){
+            case Player p -> p.getName();
+            default -> "Console";
+        };
+        // If it's a shared model, return the global hologram :
+        if(!this.isPrivate()) return this.holograms.get("");
+
+        if(!this.holograms.containsKey(identifier)) createHologram(commandSender);
+
+
+        // If it's a private, return the hologram identified by commandSender's name
+        return this.holograms.get(commandSender.getName());
     }
 
     /**
@@ -101,27 +107,9 @@ public class HologramTalkingCitizen extends TalkingCitizen {
     private Hologram createBlankHologram(String identifier) {
         Location loc = this.getLocation();
         loc.setY(getBaseY());
-        System.out.print("creating new hologram with name : " + identifier);
         Hologram newHologram = new Hologram(identifier, loc);
         DHAPI.addHologramLine(newHologram, "");
         return newHologram;
-    }
-
-    public static void printHolo(Hologram holo){
-        try{
-            DList<HologramPage> pages = holo.getPages();
-            System.out.print("hologram n° " + holo.getName());
-            System.out.print("pages : " + pages);
-            HologramPage page0 = pages.getFirst();
-            System.out.print("page 0 : " + page0);
-            List<HologramLine> lines = page0.getLines();
-            System.out.print("lines : " + lines);
-            System.out.print("line 0 : " + lines.getFirst());
-            System.out.print("line 0 content : " + lines.getFirst().getContent());
-        } catch(Exception e){
-            System.out.println("shady exception idk");
-        }
-
     }
 
     /** TODO : Tries to retrieve a color to paint the hologram with.

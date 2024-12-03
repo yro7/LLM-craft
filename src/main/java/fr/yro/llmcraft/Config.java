@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+// TODO : Initialize / Reload w/o blocking main thread
 public class Config {
 
     public static FileConfiguration config;

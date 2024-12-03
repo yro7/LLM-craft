@@ -15,8 +15,8 @@ import java.util.logging.Level;
  * A {@link Limiter} allows to save how many times can a player use a {@link IGModelType}.
  * Limiters  do not distinguish {@link IGModel} usages individually, only {@link IGModelType}.
 
- * If for any reasons the Limiter had an error during initialization, throw {@link LimiterInitializationException}.
- * This avoids that an unspotted error leads players to over-use an IGModelType which could leads
+ * If for any reason the Limiter had an error during initialization, throw {@link LimiterInitializationException}.
+ * This avoids that an unspotted error leads players to over-use an IGModelType which could lead
  * to expensive API cost.
  */
 public class Limiter {
@@ -116,6 +116,7 @@ public class Limiter {
 
 
     public boolean canUse(CommandSender sender){
+
         // The console is exempt of limitations
         if(sender instanceof ConsoleCommandSender){
             return true;
@@ -158,10 +159,14 @@ public class Limiter {
     }
 
     public String toString(){
-        String res = "Limiter " + this.modelName + ". "
+        StringBuilder groupsLimits = new StringBuilder();
+        StringBuilder playersUsage = new StringBuilder();
+        // Formats group limits hashmap in human-readable way
+        this.limits.forEach((g,v) -> groupsLimits.append(g.getName()).append(":").append(v).append("\n"));
+        this.usages.forEach((u,v) -> playersUsage.append(u.getName()).append(":").append(v).append("\n"));
+        return "Limiter " + this.modelName + ". "
                 + "\n Deny message : " + this.denyMessage
-                + "\n Limits: " + this.limits;
-                res +="\n Usages: " + this.usages;
-        return res;
+                + "\n Limits: " + groupsLimits
+                + "\n Usages: " + playersUsage;
     }
 }

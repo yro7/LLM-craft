@@ -17,7 +17,9 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 
 public final class LLM_craft extends JavaPlugin {
@@ -71,15 +73,20 @@ public final class LLM_craft extends JavaPlugin {
         this.getCommand("models").setExecutor(new Model());
         this.getCommand("modeltype").setExecutor(new ModelType());
         this.getCommand("modeltypes").setExecutor(new ModelType());
+        this.getCommand("limits").setExecutor(new Limits());
+        this.getCommand("limiter").setExecutor(new Limits());
+        this.getCommand("limiters").setExecutor(new Limits());
+        this.getCommand("limit").setExecutor(new Limits());
     }
 
 
     public static void removeHolograms(){
+
         TalkingCitizen.talkingCitizens
                 .values()
                 .stream()
                 .filter(tc -> tc instanceof HologramTalkingCitizen)
-                .forEach(tc ->{
+                .forEach(tc -> {
                     // Remove the remaining holograms
                     HologramTalkingCitizen htc = (HologramTalkingCitizen) tc;
                     htc.holograms.values().forEach(Hologram::delete);

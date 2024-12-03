@@ -5,6 +5,7 @@ import fr.yro.llmcraft.Logger;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -46,8 +47,9 @@ public class IGModelType {
         int timeOut = configSection.getInt(s+".time-out");
         String visibilityString = configSection.getString(s+".visibility").toUpperCase();
 
-        this.limits = Limiter.limiters.get(s);
-
+        Optional<Limiter> limits = Optional.ofNullable(Limiter.limiters.get(s));
+        limits.ifPresentOrElse(limit -> this.limits = limit, () ->
+                Logger.log(Level.WARNING, "No usage limiter found for model " + s + ", players could abuse the API."));
         IGModelParameters.Visibility visibility = visibilityFromString(visibilityString);
 
         this.parameters = new IGModelParameters(provider, systemPrompt, persistent, prefix,

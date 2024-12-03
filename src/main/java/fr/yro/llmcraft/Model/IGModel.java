@@ -86,6 +86,7 @@ public class IGModel {
             else user = "Console Administrator";
             prompt = user + ": " + prompt;
         }
+
         Predicate<Player> rangeManager = this.getRangeManager(sender, range);
         final String finalPrompt = prompt;
 
@@ -95,13 +96,13 @@ public class IGModel {
                 Logger.log(Level.INFO, "Generating answer for prompt " + finalPrompt);
                 String answer = getAnswer(sender, finalPrompt);
 
-                // If it's the console, send the message with .sendMessage
+                // Send the message to the sender
                 sender.sendMessage(answer);
-
                 if(!model.isPrivate()) {
                     Bukkit.getOnlinePlayers()
                             .stream()
                             .filter(rangeManager)
+                            // Avoid to send 2x the msg to the sender
                             .filter(p -> p != sender)
                             .forEach(p -> p.sendMessage(answer));
                 }
@@ -112,9 +113,9 @@ public class IGModel {
 
     public Predicate<Player> getRangeManager(CommandSender sender, Range range) {
         return player -> {
-            if(range.type == GLOBAL) return true;
             if(!(sender instanceof Player p)) return false;
-            else return(player.getLocation().distance(p.getLocation()) < range.range);
+            boolean res = (player.getLocation().distance(p.getLocation()) < range.range);
+            return res;
         };
 
     }
@@ -148,14 +149,13 @@ public class IGModel {
         Limiter limiter = this.modelType.limits;
         if(limiter == null){
             return true;
-
         }
-        return this.modelType.limits.canUse(sender);
+        return limiter.canUse(sender);
     }
 
     public void use(CommandSender sender){
         Limiter limiter = this.modelType.limits;
-        if(limiter != null) this.modelType.limits.use(sender);
+        if(limiter != null) limiter.use(sender);
     }
 
     public String getDenyMessage(){

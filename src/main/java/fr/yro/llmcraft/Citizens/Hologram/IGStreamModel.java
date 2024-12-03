@@ -8,6 +8,7 @@ import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.holograms.HologramLine;
 import eu.decentsoftware.holograms.api.holograms.HologramPage;
+import fr.yro.llmcraft.Citizens.Range;
 import fr.yro.llmcraft.Config;
 import fr.yro.llmcraft.LLM_craft;
 import fr.yro.llmcraft.Logger;
@@ -46,8 +47,10 @@ public class IGStreamModel extends IGModel  {
 
     public IGStreamModel(IGModelType type, String identifier, String systemAppend, Hologram hologram, String color, double y){
         super(type, identifier, systemAppend);
+
         ChatMemory chatMemory = MessageWindowChatMemory.withMaxMessages(10);
         this.hologram = hologram;
+
         this.identifier = identifier;
         this.modelType = type;
         this.model = ChatLanguageModelBuilder.buildStream(this.modelType);
@@ -62,8 +65,7 @@ public class IGStreamModel extends IGModel  {
     }
 
     @Override
-    public void chat(String prompt, CommandSender sender) {
-
+    public void chat(String prompt, CommandSender sender, Range range) {
         IGStreamModel thisModel = this;
         String answer = "";
 
@@ -71,19 +73,14 @@ public class IGStreamModel extends IGModel  {
             answer = this.modelType.parameters.prefix + this.getDenyMessage();
             sender.sendMessage(answer);
             return;
-
         }
-
         else{
             this.use(sender);
         }
-
         if(Config.provideUsername) {
             if (sender instanceof Entity e) prompt = e.getName() + ": " + prompt;
             else prompt =  "Console : " + prompt;
         }
-
-
         String finalPrompt = prompt;
         new BukkitRunnable() {
             @Override

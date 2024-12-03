@@ -1,5 +1,6 @@
 package fr.yro.llmcraft.Citizens;
 
+import fr.yro.llmcraft.Citizens.Hologram.HologramTalkingCitizen;
 import fr.yro.llmcraft.Model.IGModel;
 import fr.yro.llmcraft.Model.IGModelParameters;
 import net.citizensnpcs.api.CitizensAPI;
@@ -38,11 +39,12 @@ public abstract class TalkingCitizen  {
         this.parameters = parameters;
     }
 
-    public void abstract createModel();
+    public abstract IGModel createModel(CommandSender sender);
+
 
 
     public void chat(String s, CommandSender commandSender){
-        this.getModel(commandSender).chat(s,commandSender);
+        this.getModel(commandSender).chat(s,commandSender, this.getRange());
     }
 
     /**
@@ -51,28 +53,17 @@ public abstract class TalkingCitizen  {
      * @return
      */
     public IGModel getModel(CommandSender commandSender){
-        IGModel res = null;
-        switch(this.getParameters().modelType.parameters.visibility){
-            case PERSONAL:
+        IGModel res;
+        String name = switch(this.getParameters().modelType.parameters.visibility) {
+            case PERSONAL -> commandSender.getName();
+            case SHARED -> "";
 
-                String name = commandSender.getName();
-                if(!models.containsKey(name)){
-                    String identifier = this.getIdentifier(commandSender);
-                    System.out.println("DEBUG LINE CREATE MODEL: TC : " + this);
-                    res = CreateModel();
-                    res = new IGModel(this.getParameters().modelType,
-                            identifier, this.getParameters().systemAppend);
-                    models.put(name,res);
-                }
-                res = this.models.get(commandSender.getName());
-                break;
-
-            case SHARED:
-                res = this.models.get("");
-                break;
+        };
+        if(!models.containsKey(name)){
+            res = this.createModel(commandSender);
+            models.put(name,res);
         }
-        
-        return res;
+        return models.get(name);
     }
 
 
@@ -145,5 +136,9 @@ public abstract class TalkingCitizen  {
 
     public IGModelParameters.Visibility getVisibility(){
         return this.parameters.modelType.parameters.visibility;
+    }
+
+    public boolean isPrivate(){
+        return this.getVisibility().equals(IGModelParameters.Visibility.PERSONAL);
     }
 }

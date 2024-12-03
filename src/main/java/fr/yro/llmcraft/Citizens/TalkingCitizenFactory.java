@@ -4,6 +4,7 @@ import fr.yro.llmcraft.Citizens.Hologram.HologramTalkingCitizen;
 import fr.yro.llmcraft.Config;
 import fr.yro.llmcraft.Logger;
 import fr.yro.llmcraft.Model.IGModelType;
+import org.apache.poi.ss.formula.functions.T;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
@@ -54,7 +55,12 @@ public class TalkingCitizenFactory {
                     "Maybe check your API Key or the name of the model in config.yml ?");
             return null;
         }
+// TODO : Generate WARN if citizen has 2 models associated
         parameters.npcID = configSection.getInt(s+".citizen-id");
+        if(TalkingCitizen.talkingCitizens.containsKey(parameters.npcID)){
+            Logger.log(Level.WARNING, "Duplicate npc-id found in config.yml, the last one will override the other(s).");
+        }
+
         parameters.messageOnlyInRange = configSection.getBoolean(s+".message-only-in-range");
         parameters.systemAppend = configSection.getString(s+".system-append");
         int range = configSection.getInt(s+".range");

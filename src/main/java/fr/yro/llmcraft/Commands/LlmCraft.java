@@ -18,6 +18,7 @@ public class LlmCraft implements CommandExecutor {
         commandSender.sendMessage("");
         commandSender.sendMessage("§aCommands:");
         commandSender.sendMessage("§a- /model <model> | Get informations on a model");
+        commandSender.sendMessage("§a- /modeltype <model type> | Get informations on a model type");
         commandSender.sendMessage("§a- /ask <model> <prompt>");
         commandSender.sendMessage("§a- /listen <player> <model> <number of times> ");
         commandSender.sendMessage("§a- /instance <model type> <name of the new model> | Creates a new model from a modeltype");
