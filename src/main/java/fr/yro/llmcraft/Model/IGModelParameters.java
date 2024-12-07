@@ -1,6 +1,9 @@
 package fr.yro.llmcraft.Model;
 
+import fr.yro.llmcraft.Logger;
+
 import java.util.Objects;
+import java.util.logging.Level;
 
 public class IGModelParameters {
 
@@ -27,13 +30,16 @@ public class IGModelParameters {
         this.persistent = persistent;
         this.prefix = Objects.requireNonNullElse(prefix, "");
         this.modelName = Objects.requireNonNullElse(modelName, "gpt-3.5-turbo");
-        this.temperature = Objects.requireNonNullElse(temperature, 0.7);
-        this.maxTokens = Objects.requireNonNullElse(max_tokens, 1000);
-        this.frequencyPenalty = Objects.requireNonNullElse(frequency_penalty, Double.valueOf(0));
-        this.timeOut = Objects.requireNonNullElse(timeOut, 60);
+        this.temperature = temperature;
+        this.maxTokens = max_tokens;
+        this.frequencyPenalty = frequency_penalty;
+        this.timeOut = timeOut;
         this.visibility = Objects.requireNonNullElse(visibility, Visibility.PERSONAL);
         this.provider = provider;
 
+        if(this.frequencyPenalty != 0 && provider != IGModelType.Provider.OPENAI){
+            Logger.log(Level.WARNING, "ModelType + " + modelName + " : Frequency Penalty option is only available for OpenAI models, the option will be ignored.");
+        }
     }
 
 }

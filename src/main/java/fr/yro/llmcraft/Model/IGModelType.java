@@ -20,6 +20,14 @@ public class IGModelType {
     public static ConfigurationSection configSection;
     public static HashMap<String, IGModelType> modelsTypes;
 
+    public Integer getMaxTokens() {
+        return this.parameters.maxTokens;
+    }
+
+    public Double getFrequencyPenalty() {
+        return this.parameters.frequencyPenalty;
+    }
+
     public enum Provider {
         OPENAI,
         ANTHROPIC
@@ -37,12 +45,13 @@ public class IGModelType {
         this.name = s;
         Logger.log(Level.CONFIG, "Initializing new ModelType " + s);
         Provider provider = Provider.valueOf(configSection.getString(s+".provider").toUpperCase());
+        // Getting values from config. Right values are values by default.
         String systemPrompt = configSection.getString(s+".system-prompt");
         boolean persistent = configSection.getBoolean(s + ".persistent");
         String prefix = configSection.getString(s+".prefix");
         String modelName = configSection.getString(s+".model-name");
-        double temperature = configSection.getDouble(s+".temperature");
-        int max_tokens = configSection.getInt(s+".max-tokens");
+        double temperature = configSection.getDouble(s+".temperature",0.2);
+        int max_tokens = configSection.getInt(s+".max-tokens",1000);
         double frequencyPenalty = configSection.getDouble(s+".frequency-penalty");
         int timeOut = configSection.getInt(s+".time-out");
         String visibilityString = configSection.getString(s+".visibility").toUpperCase();

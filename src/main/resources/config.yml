@@ -1,54 +1,85 @@
 
-openAI: "your key here"
-anthropic: "your key here"
-hologram-speed: 1
+openAI: "Your private API key here"
+anthropic: "Your private API key here"
+hologram-speed: 0.75
 models:
   city-guard:
     provider: openai
+    visibility: shared
     model-name: gpt-3.5-turbo
-    system-prompt: "You are a Minecraft AI assistant. Help the player."
-    visibility: public
-  troller:
-    provider: anthropic
-    model-name:
+    system-prompt: "System instructions : [You only generate text, never metadata of what you are saying. You're a Guard in a Minecraft City.]"
+    prefix: "§6§lGuard > §e"
+  king:
+    provider: openai
+    visibility: shared
+    persistent: true
+    prefix: "§6§lKing > §e"
+    system-prompt: "System instructions : [You only generate text, never metadata of what you are saying. You are the king of the Kingdom of Gloria, and your castle is assieged !]"
+  helper:
+    provider: openai
     visibility: private
-    system-prompt: "You are an evil Minecraft AI which aims to mock and troll other Players based on what they say, starting now:"
-    persistent: true # Will the model remember what was previously said ?
-    prefix: "§6§lDevilGPT > §e" # Do you want to put a prefix before the model answers ?
+    persistent: true
+    prefix: "§6§lHelper >§e§l "
+    system-prompt: "You are a Minecraft assistant, design to help the players with anything minecraft-related."
+  crazy-guy:
+    provider: openai
+    visibility: shared
+    persistent: true
+    prefix: "§6§lCrazy Guy >§e"
+    system-prompt: "You are a completely insane medieval peasant, who likes to prank, joke, taunt etc."
     temperature: 0.2
     max-tokens: 400
     frequency-penalty: 2
     time-out: 60
 
-  helper:
-    provider: openai
-    visibility: private
-    persistent: true
-    prefix: "§6§lHelper > §e"
-    system-prompt: "You are a Minecraft helper, helping people when they ask you question."
 npcs:
-  guard:
+  kind-guard:
     citizen-id: 0
     model: city-guard
-    type: shared
     talking: chat
-    range: 10
+    system-append: "You're particularly kind and greetful."
+    range: 5
     message-only-in-range: true
-  helper:
+  mean-guard:
     citizen-id: 1
-    model: helper
-    type: personal
+    model: city-guard
+    system-append: "You're particularly awful and mean."
+    talking: chat
+    range: 5
+    message-only-in-range: true
+  king:
+    citizen-id: 4
+    model: king
+    talking: hologram
+    range: 20
+    message-only-in-range: true
+  crazy-guy:
+    citizen-id: 5
+    model: crazy-guy
     talking: chat
     range: 15
     message-only-in-range: true
+  helper:
+    citizen-id: 6
+    model: helper
+    talking: hologram
+    range: 15
+    message-only-in-range: true
+
 
 usage-limits:
+  king:
+    deny-message: "I'm busy right now, sorry."
+    groups:
+      default: 3
+      vip: 5
+      super-vip: 10
   city-guard:
     deny-message: "You can not enter this castle."
     groups:
-      default: 10
-      vip: 20
+      default: 3
   helper:
     deny-message: "I don't have anything to learn you anymore, good game !"
     groups:
-      vip: 0
+      default: 2
+      super-vip: 10

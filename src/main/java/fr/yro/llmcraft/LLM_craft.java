@@ -2,6 +2,8 @@ package fr.yro.llmcraft;
 
 import dev.langchain4j.service.OnCompleteOrOnError;
 import dev.langchain4j.service.TokenStream;
+import eu.decentsoftware.holograms.api.DHAPI;
+import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import fr.yro.llmcraft.Citizens.Hologram.HologramTalkingCitizen;
 import fr.yro.llmcraft.Citizens.Hologram.IGStreamModel;
@@ -13,6 +15,7 @@ import fr.yro.llmcraft.Model.IGModel;
 import fr.yro.llmcraft.Model.IGModelType;
 import fr.yro.llmcraft.Model.Limiter;
 import fr.yro.llmcraft.Model.ListeningModel;
+import net.citizensnpcs.api.CitizensAPI;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,25 +24,29 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 
 public final class LLM_craft extends JavaPlugin {
 
     public static LLM_craft instance;
-
     public static LLM_craft getInstance(){
         return instance;
     }
     public static LuckPerms luckPermsAPI;
 
+    public static boolean luckpermsPresent;
+    public static boolean dhPresent;
+    public static boolean citizensPresent;
+
     @Override
     public void onEnable() {
         // Plugin startup logic
         instance = this;
+        resolveDependencies();
         Logger.logger = this.getLogger();
         saveDefaultConfig();
         Config.load();
 
-        luckPermsAPI = LuckPermsProvider.get();
         Limiter.initialize();
 
         IGModel.activeModels = new HashMap<>();
@@ -52,6 +59,33 @@ public final class LLM_craft extends JavaPlugin {
 
         bStatsEnable();
         registerCommands();
+    }
+
+    private void resolveDependencies() {
+        try{
+            luckPermsAPI = LuckPermsProvider.get();
+            luckpermsPresent = true;
+        } catch(NoClassDefFoundError e){
+            Logger.log(Level.SEVERE, "Luckperms dependency not found, Limiters won't work !");
+            luckpermsPresent = false;
+        }
+
+        try {
+            CitizensAPI.getNPCRegistry();
+            citizensPresent = true;
+        } catch (IllegalStateException e) {
+            Logger.log(Level.SEVERE, "Citizens not enabled, Talking Citizens won't work !");
+            citizensPresent = false;
+        }
+
+        try {
+            DecentHologramsAPI.get();
+            dhPresent = true;
+        } catch (NoClassDefFoundError e) {
+            Logger.log(Level.SEVERE, "Decent Holograms not enabled, Hologram-Talking Citizens won't work !");
+            dhPresent = false;
+        }
+
     }
 
     @Override
@@ -81,7 +115,6 @@ public final class LLM_craft extends JavaPlugin {
 
 
     public static void removeHolograms(){
-
         TalkingCitizen.talkingCitizens
                 .values()
                 .stream()

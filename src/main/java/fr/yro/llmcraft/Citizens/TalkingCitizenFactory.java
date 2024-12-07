@@ -2,8 +2,11 @@ package fr.yro.llmcraft.Citizens;
 
 import fr.yro.llmcraft.Citizens.Hologram.HologramTalkingCitizen;
 import fr.yro.llmcraft.Config;
+import fr.yro.llmcraft.LLM_craft;
 import fr.yro.llmcraft.Logger;
 import fr.yro.llmcraft.Model.IGModelType;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPCRegistry;
 import org.apache.poi.ss.formula.functions.T;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -24,7 +27,6 @@ public class TalkingCitizenFactory {
             Logger.log(Level.WARNING, "Citizens soft-depend not found.");
             return;
         }
-
         TalkingCitizen.talkingCitizens = new HashMap<>();
         TalkingCitizen.talkingCitizens = getTalkingCitizensFromConfig();
 
@@ -45,6 +47,10 @@ public class TalkingCitizenFactory {
 
 
     public static TalkingCitizen create(String s) {
+        if(!LLM_craft.citizensPresent){
+            Logger.log(Level.SEVERE, "Luckperms is not enabled on your server, skipping NPC " + s + " initialization.");
+            return null;
+        }
         Logger.log(Level.CONFIG, "Initializing new TalkingCitizen " + s);
 
         TalkingCitizenParameters parameters = new TalkingCitizenParameters();
@@ -55,8 +61,13 @@ public class TalkingCitizenFactory {
                     "Maybe check your API Key or the name of the model in config.yml ?");
             return null;
         }
-// TODO : Generate WARN if citizen has 2 models associated
+
         parameters.npcID = configSection.getInt(s+".citizen-id");
+        NPCRegistry registry = CitizensAPI.getNPCRegistry();
+
+        if(registry.getById(parameters.npcID) == null){
+            Logger.log(Level.WARNING, "NPC n°" + parameters.npcID + " not found. Please check config.yml.");
+        }
         if(TalkingCitizen.talkingCitizens.containsKey(parameters.npcID)){
             Logger.log(Level.WARNING, "Duplicate npc-id found in config.yml, the last one will override the other(s).");
         }

@@ -10,16 +10,19 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class NPCListener implements Listener {
 
-
+    public static List<String> defaultMessages = List.of("");
 
     @EventHandler
     public void onNPCCLick(NPCRightClickEvent e){
         NPC npc = e.getNPC();
         if(TalkingCitizen.isTalkingCitizen(npc)){
             TalkingCitizen tc = TalkingCitizen.getTalkingFromNPC(npc);
-            tc.chat(" ", e.getClicker());
+            tc.chat("Hey !", e.getClicker());
 
         }
     }

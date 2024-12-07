@@ -8,25 +8,29 @@ import fr.yro.llmcraft.Model.IGModel;
 import fr.yro.llmcraft.Model.IGModelType;
 import fr.yro.llmcraft.Model.Limiter;
 import fr.yro.llmcraft.Model.ListeningModel;
+import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.command.CommandSender;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 
 public class Reload
 {
     public static void reload(CommandSender sender){
-        LLM_craft.removeHolograms();
-        Config.load();
-        IGModel.activeModels = new HashMap<>();
-        ListeningModel.listeningModels = new HashMap<>();
-        Limiter.limiters = new HashMap<>();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                LLM_craft.removeHolograms();
+                Config.load();
+                Limiter.initialize();
 
-        IGModelType.initialize();
-        TalkingCitizenFactory.initialize();
-        Limiter.initialize();
-
-
-        sender.sendMessage("§7* §aLLMCraft successfully reloaded.");
+                IGModel.activeModels = new HashMap<>();
+                ListeningModel.listeningModels = new HashMap<>();
+                IGModelType.initialize();
+                TalkingCitizenFactory.initialize();
+                sender.sendMessage("§7* §aLLMCraft successfully reloaded.");
+            }
+        }.runTaskAsynchronously(LLM_craft.getInstance());
 
     }
 }

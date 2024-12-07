@@ -37,6 +37,10 @@ public class Limiter {
     }
 
     public Limiter(String s) throws LimiterInitializationException {
+        if(!LLM_craft.luckpermsPresent){
+            Logger.log(Level.SEVERE, "Luckperms is not enabled on your server, skipping Limiter " + s + " initialization.");
+            return;
+        }
         this.modelName = s;
         this.limits = new HashMap<>();
         this.usages = new HashMap<>();
@@ -51,6 +55,8 @@ public class Limiter {
 
         ConfigurationSection groupConfigSection = configSection.getConfigurationSection(s+".groups");
         for(String section : groupConfigSection.getKeys(false)){
+
+
             Group group = LLM_craft.luckPermsAPI.getGroupManager().getGroup(section);
             if(group == null) {
                 Logger.log(Level.SEVERE, "Group '" + section +"' not found in limiter " + this.modelName + ". Please, check your config.yml");
@@ -75,8 +81,6 @@ public class Limiter {
     public static void initialize(){
         Limiter.limiters = new HashMap<>();
         Limiter.configSection = Config.config.getConfigurationSection("usage-limits");
-
-
         if(configSection == null){
             Logger.log(Level.WARNING, "You don't have any limiter in your config.yml. Beware of the mighty API prices !");
             return;
@@ -89,7 +93,6 @@ public class Limiter {
         HashMap<String, Limiter> res = new HashMap<>();
         Set<String> limitersPath = configSection.getKeys(false);
         for(String limiterPath : limitersPath){
-
             try {
                 Limiter limiter = new Limiter(limiterPath);
                 res.put(limiterPath, limiter);

@@ -7,14 +7,19 @@ import eu.decentsoftware.holograms.api.holograms.HologramPage;
 import eu.decentsoftware.holograms.api.utils.collection.DList;
 import fr.yro.llmcraft.Citizens.TalkingCitizen;
 import fr.yro.llmcraft.Citizens.TalkingCitizenParameters;
+import fr.yro.llmcraft.LLM_craft;
+import fr.yro.llmcraft.Logger;
 import fr.yro.llmcraft.Model.IGModel;
 import fr.yro.llmcraft.Model.IGModelParameters;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPCRegistry;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
 
 public class HologramTalkingCitizen extends TalkingCitizen {
 
@@ -31,6 +36,11 @@ public class HologramTalkingCitizen extends TalkingCitizen {
 
     public HologramTalkingCitizen(TalkingCitizenParameters parameters) {
         super(parameters);
+        if(!LLM_craft.dhPresent) {
+            Logger.log(Level.SEVERE, "Decent Holograms is not enabled on your server, skipping Hologram Talking Citizens " + parameters.name + " initialization.");
+            return;
+        }
+
         this.holograms = new HashMap<>();
     }
 

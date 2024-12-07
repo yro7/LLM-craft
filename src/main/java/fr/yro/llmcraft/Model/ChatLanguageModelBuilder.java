@@ -29,11 +29,14 @@ public class ChatLanguageModelBuilder {
                         .apiKey(Config.openAI)
                         .modelName(igModelType.getModelName())
                         .temperature(igModelType.getTemperature())
+                        .maxTokens(igModelType.getMaxTokens())
+                        .frequencyPenalty(igModelType.getFrequencyPenalty())
                         .timeout(Duration.of(igModelType.getTO(), ChronoUnit.SECONDS))
                         .build();
             case ANTHROPIC -> AnthropicChatModel.builder()
                         .apiKey(Config.anthropicAPI)
                         .modelName(igModelType.getModelName())
+                        .maxTokens(igModelType.getMaxTokens())
                         .temperature(igModelType.getTemperature())
                         .timeout(Duration.of(igModelType.getTO(), ChronoUnit.SECONDS))
                         .build();
@@ -45,12 +48,15 @@ public class ChatLanguageModelBuilder {
         return switch(igModelType.parameters.provider){
             case OPENAI -> OpenAiStreamingChatModel.builder()
                     .apiKey(Config.openAI)
+                    .maxTokens(igModelType.getMaxTokens())
                     .modelName(igModelType.getModelName())
                     .temperature(igModelType.getTemperature())
                     .timeout(Duration.of(igModelType.getTO(), ChronoUnit.SECONDS))
+                    .frequencyPenalty(igModelType.getFrequencyPenalty())
                     .build();
             case ANTHROPIC -> AnthropicStreamingChatModel.builder()
                     .apiKey(Config.anthropicAPI)
+                    .maxTokens(igModelType.getMaxTokens())
                     .modelName(igModelType.getModelName())
                     .temperature(igModelType.getTemperature())
                     .timeout(Duration.of(igModelType.getTO(), ChronoUnit.SECONDS))
@@ -59,13 +65,10 @@ public class ChatLanguageModelBuilder {
     }
 
     public static class ProviderUnavailableException extends Exception {
-
         IGModelType.Provider provider;
-
         public ProviderUnavailableException(IGModelType.Provider provider) {
             this.provider = provider;
         }
-
         public IGModelType.Provider getProvider() {
             return this.provider;
         }

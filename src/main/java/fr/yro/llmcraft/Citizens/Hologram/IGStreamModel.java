@@ -15,14 +15,11 @@ import fr.yro.llmcraft.Logger;
 import fr.yro.llmcraft.Model.ChatLanguageModelBuilder;
 import fr.yro.llmcraft.Model.IGModel;
 import fr.yro.llmcraft.Model.IGModelType;
-import kotlin.text.Regex;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
@@ -81,6 +78,7 @@ public class IGStreamModel extends IGModel  {
             if (sender instanceof Entity e) prompt = e.getName() + ": " + prompt;
             else prompt =  "Console : " + prompt;
         }
+
         String finalPrompt = prompt;
         new BukkitRunnable() {
             @Override
@@ -166,11 +164,11 @@ public class IGStreamModel extends IGModel  {
 
     // Change the delay between 2 tokens in function of the token.
     public int getTimeToWait(String token){
-        return (int) (Config.hologramSpeed*switch(token){
+        return (int) (1/Config.hologramSpeed)*switch(token){
                     case ".", "?", "!" -> 850;
                     case ";", "," -> 600;
                     default -> 90;
-                });
+                };
     }
 
 }

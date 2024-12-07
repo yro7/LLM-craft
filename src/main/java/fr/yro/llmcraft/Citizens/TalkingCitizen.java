@@ -73,15 +73,6 @@ public abstract class TalkingCitizen  {
     }
 
     /**
-     * Tries to retrieve a NPC from {@link NPCRegistry}.
-     */
-    public NPC getNPC(){
-        NPCRegistry registry = CitizensAPI.getNPCRegistry();
-        return registry.getById(this.getParameters().npcID);
-    }
-
-
-    /**
      * If the player is in range of the NPC : when the player sends a message, should the message only be sent to players in the radius of the NPC, or should everyone should be able to hear it?
      *
      */
@@ -117,11 +108,11 @@ public abstract class TalkingCitizen  {
 
 
     public static boolean isTalkingCitizen(NPC npc){
-        return talkingCitizens.containsKey(npc);
+        return talkingCitizens.containsKey(npc.getId());
     }
 
     public static TalkingCitizen getTalkingFromNPC(NPC npc){
-        return talkingCitizens.get(npc);
+        return talkingCitizens.get(npc.getId());
     }
 
     public Range getRange(){
