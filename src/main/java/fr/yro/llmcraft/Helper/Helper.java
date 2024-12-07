@@ -1,31 +1,10 @@
 package fr.yro.llmcraft.Helper;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.ToNumberStrategy;
-import com.google.gson.stream.JsonReader;
 import dev.langchain4j.data.document.Document;
-import dev.langchain4j.data.document.Metadata;
-import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
-import dev.langchain4j.data.document.parser.TextDocumentParser;
-import dev.langchain4j.data.document.parser.apache.tika.ApacheTikaDocumentParser;
-import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.memory.ChatMemory;
-import dev.langchain4j.memory.chat.MessageWindowChatMemory;
-import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
-import dev.langchain4j.service.AiServices;
-import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
-import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import fr.yro.llmcraft.Model.IGModel;
 import fr.yro.llmcraft.Model.IGModelType;
-import kotlin.text.Regex;
 
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.PathMatcher;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Helper extends IGModel {
 

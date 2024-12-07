@@ -7,7 +7,6 @@ import fr.yro.llmcraft.Logger;
 import fr.yro.llmcraft.Model.IGModelType;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPCRegistry;
-import org.apache.poi.ss.formula.functions.T;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
