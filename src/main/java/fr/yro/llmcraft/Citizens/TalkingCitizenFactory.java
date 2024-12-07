@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.logging.Level;
 
+import static fr.yro.llmcraft.LLM_craft.premium;
+
 public class TalkingCitizenFactory {
 
     public static ConfigurationSection configSection;
@@ -78,6 +80,9 @@ public class TalkingCitizenFactory {
         parameters.range = new Range(Range.Type.WORLD, range);
 
         String type = (configSection.getString(s+".talking").toUpperCase());
+
+        // If non-premium version, disable holographic display
+        if(!premium) return new ChatTalkingCitizen(parameters);
 
         return switch(type){
             case "HOLOGRAM" -> new HologramTalkingCitizen(parameters);

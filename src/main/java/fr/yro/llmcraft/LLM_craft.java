@@ -18,6 +18,7 @@ import fr.yro.llmcraft.Model.ListeningModel;
 import net.citizensnpcs.api.CitizensAPI;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -38,17 +39,17 @@ public final class LLM_craft extends JavaPlugin {
     public static boolean dhPresent;
     public static boolean citizensPresent;
 
+    public static final boolean premium = true;
+
     @Override
     public void onEnable() {
         // Plugin startup logic
         instance = this;
-        resolveDependencies();
         Logger.logger = this.getLogger();
+        resolveDependencies();
         saveDefaultConfig();
         Config.load();
-
         Limiter.initialize();
-
         IGModel.activeModels = new HashMap<>();
         ListeningModel.listeningModels = new HashMap<>();
         IGModelType.initialize();
@@ -59,6 +60,7 @@ public final class LLM_craft extends JavaPlugin {
 
         bStatsEnable();
         registerCommands();
+        if(premium) Logger.log(Level.SEVERE, "Premium version enabled, thanks you for your support!");
     }
 
     private void resolveDependencies() {
@@ -96,6 +98,8 @@ public final class LLM_craft extends JavaPlugin {
 
     public void bStatsEnable(){
         int pluginId = 24003;
+        Metrics metrics = new Metrics(this, pluginId);
+
     }
 
     public void registerCommands(){
