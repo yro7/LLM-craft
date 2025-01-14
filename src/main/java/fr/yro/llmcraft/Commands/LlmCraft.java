@@ -14,7 +14,7 @@ public class LlmCraft implements CommandExecutor {
             return true;
         }
         commandSender.sendMessage("§2§l§m-|--- §a§l LLM-Craft §2§l§m----|-");
-        commandSender.sendMessage("§aCreated by yro for Vikicraft (GNU GPL v3)");
+        commandSender.sendMessage("§aCreated by yro (GNU GPL v3)");
         commandSender.sendMessage("");
         commandSender.sendMessage("§aCommands:");
         commandSender.sendMessage("§a- /model <model> | Get informations on a model");

@@ -39,7 +39,7 @@ public final class LLM_craft extends JavaPlugin {
     public static boolean dhPresent;
     public static boolean citizensPresent;
 
-    public static final boolean premium = false;
+    public static final boolean premium = true;
 
     @Override
     public void onEnable() {
