@@ -4,6 +4,8 @@ import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.anthropic.AnthropicStreamingChatModel;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.chat.StreamingChatLanguageModel;
+import dev.langchain4j.model.mistralai.MistralAiChatModel;
+import dev.langchain4j.model.mistralai.MistralAiStreamingChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.model.openai.OpenAiStreamingResponseBuilder;
@@ -40,6 +42,13 @@ public class ChatLanguageModelBuilder {
                         .temperature(igModelType.getTemperature())
                         .timeout(Duration.of(igModelType.getTO(), ChronoUnit.SECONDS))
                         .build();
+                case MISTRAL -> MistralAiChatModel.builder()
+                        .apiKey(Config.mistralAPI)
+                        .maxTokens(igModelType.getMaxTokens())
+                        .modelName(igModelType.getModelName())
+                        .temperature(igModelType.getTemperature())
+                        .timeout(Duration.of(igModelType.getTO(), ChronoUnit.SECONDS))
+                        .build();
         };
     }
     public static StreamingChatLanguageModel buildStream(IGModelType igModelType){
@@ -56,6 +65,13 @@ public class ChatLanguageModelBuilder {
                     .build();
             case ANTHROPIC -> AnthropicStreamingChatModel.builder()
                     .apiKey(Config.anthropicAPI)
+                    .maxTokens(igModelType.getMaxTokens())
+                    .modelName(igModelType.getModelName())
+                    .temperature(igModelType.getTemperature())
+                    .timeout(Duration.of(igModelType.getTO(), ChronoUnit.SECONDS))
+                    .build();
+            case MISTRAL -> MistralAiStreamingChatModel.builder()
+                    .apiKey(Config.mistralAPI)
                     .maxTokens(igModelType.getMaxTokens())
                     .modelName(igModelType.getModelName())
                     .temperature(igModelType.getTemperature())

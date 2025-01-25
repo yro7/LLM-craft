@@ -1,6 +1,7 @@
 
 openAI: "Your private API key here"
 anthropic: "Your private API key here"
+mistral: "Your private API key here"
 hologram-speed: 0.75
 models:
   city-guard:

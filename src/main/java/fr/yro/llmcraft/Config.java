@@ -13,8 +13,12 @@ import java.util.logging.Level;
 public class Config {
 
     public static FileConfiguration config;
+
+    // API keys
     public static String openAI;
     public static String anthropicAPI;
+    public static String mistralAPI;
+
     public static double hologramSpeed;
     public static List<IGModelType.Provider> availableProviders;
     public static boolean provideUsername = true;

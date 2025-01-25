@@ -30,7 +30,8 @@ public class IGModelType {
 
     public enum Provider {
         OPENAI,
-        ANTHROPIC
+        ANTHROPIC,
+        MISTRAL
     }
 
     public String name;
