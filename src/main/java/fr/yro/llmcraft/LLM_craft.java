@@ -2,7 +2,6 @@ package fr.yro.llmcraft;
 
 import dev.langchain4j.service.OnCompleteOrOnError;
 import dev.langchain4j.service.TokenStream;
-import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.DecentHologramsAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import fr.yro.llmcraft.Citizens.Hologram.HologramTalkingCitizen;
@@ -20,10 +19,7 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
@@ -39,7 +35,7 @@ public final class LLM_craft extends JavaPlugin {
     public static boolean dhPresent;
     public static boolean citizensPresent;
 
-    public static final boolean premium = true;
+    public static final boolean premium = false;
 
     @Override
     public void onEnable() {
@@ -82,7 +78,13 @@ public final class LLM_craft extends JavaPlugin {
 
         try {
             DecentHologramsAPI.get();
-            dhPresent = true;
+            if(citizensPresent) {
+                dhPresent = true;
+            }
+            else {
+                Logger.log(Level.SEVERE, "Citizens is not enabled, Hologram-Talking Citizens won't work !");
+                dhPresent = false;
+            }
         } catch (NoClassDefFoundError e) {
             Logger.log(Level.SEVERE, "Decent Holograms not enabled, Hologram-Talking Citizens won't work !");
             dhPresent = false;

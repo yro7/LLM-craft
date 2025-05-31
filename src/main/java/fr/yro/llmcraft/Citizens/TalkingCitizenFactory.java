@@ -41,7 +41,7 @@ public class TalkingCitizenFactory {
         Set<String> modelsPath = configSection.getKeys(false);
         modelsPath.forEach(s -> {
             TalkingCitizen tc = TalkingCitizenFactory.create(s);
-            res.put(tc.getParameters().npcID, tc);
+            if(tc != null) res.put(tc.getParameters().npcID, tc);
         });
         return res;
     }
@@ -68,6 +68,7 @@ public class TalkingCitizenFactory {
 
         if(registry.getById(parameters.npcID) == null){
             Logger.log(Level.WARNING, "NPC n°" + parameters.npcID + " not found. Please check config.yml.");
+            return null;
         }
         if(TalkingCitizen.talkingCitizens.containsKey(parameters.npcID)){
             Logger.log(Level.WARNING, "Duplicate npc-id found in config.yml, the last one will override the other(s).");
